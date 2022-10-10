@@ -67,7 +67,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
 	# 'spider_proxy.pipelines.SpiderProxyPipeline': 300,
-	# 'spider_proxy.spider_pipelines.cn_66ip_pipeline.CN66IPPipeline': 300,
+	'spider_proxy.spider_pipelines.cn_66ip_pipeline.CN66IPPipeline': 300,
 
 }
 

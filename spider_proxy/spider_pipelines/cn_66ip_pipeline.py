@@ -15,7 +15,7 @@ class CN66IPPipeline(BasePipeline):
         spider_proxy_model = SpiderProxyModel(**item_dict)
 
         try:
-            telnetlib.Telnet(host=spider_proxy_model.ip, port=spider_proxy_model.port, timeout=10)
+            # telnetlib.Telnet(host=spider_proxy_model.ip, port=spider_proxy_model.port, timeout=10)
             self._session_add_model_auto_commit(spider_proxy_model)
 
         except Exception as e:

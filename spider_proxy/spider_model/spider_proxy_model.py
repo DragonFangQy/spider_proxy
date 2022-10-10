@@ -1,3 +1,5 @@
+
+import json
 from sqlalchemy import Column, String, Integer
 
 from spider_proxy.spider_model.base_model import BaseModel
@@ -22,3 +24,20 @@ class SpiderProxyModel(BaseModel):
 		self.location = location
 		self.network_operator = network_operator
 		self.useable = useable
+
+	def to_string(self):
+		return json.dumps(self.to_dict())
+
+	def to_dict(self):
+		return {
+			"protocol":self.protocol,
+			"ip":self.ip,
+			"port":self.port,
+			"anonymity_type":self.anonymity_type,
+			"location":self.location,
+			"network_operator":self.network_operator,
+			"useable":self.useable,
+		}
+
+
+
