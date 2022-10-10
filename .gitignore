@@ -95,6 +95,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+# 屏蔽虚拟环境
+venv_*
 
 # Spyder project settings
 .spyderproject
