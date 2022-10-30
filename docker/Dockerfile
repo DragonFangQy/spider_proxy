@@ -11,7 +11,7 @@ COPY requirements/requirements.txt /${PROJECT_DIRNAME}/requirements.txt
 
 # install python packages.
 RUN pip install --upgrade pip &&\
-    pip install --no-cache-dir -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+    pip install --no-cache-dir -r requirements.txt -i https://pypi.douban.com/simple/
 
 # add code.
 COPY deploy /${PROJECT_DIRNAME}/deploy
