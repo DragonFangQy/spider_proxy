@@ -4,7 +4,7 @@ ARG PROJECT_DIRNAME
 
 # prepare install
 RUN mkdir /${PROJECT_DIRNAME}&&\
-        apt-get update --allow-releaseinfo-change && apt-get -y install gcc libkrb5-dev
+        apt-get update --allow-releaseinfo-change && apt-get -y install gcc libkrb5-dev  python3-dev
 
 WORKDIR /${PROJECT_DIRNAME}
 COPY requirements/requirements.txt /${PROJECT_DIRNAME}/requirements.txt
