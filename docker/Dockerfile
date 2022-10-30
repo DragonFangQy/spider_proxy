@@ -1,6 +1,6 @@
 FROM python:3.10
 
-ARG PROJECT_DIRNAME="spider_proxy"
+ARG PROJECT_DIRNAME
 
 # prepare install
 RUN mkdir /${PROJECT_DIRNAME}&&\
@@ -14,6 +14,7 @@ RUN pip install --upgrade pip &&\
     pip install --no-cache-dir -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 # add code.
+COPY deploy /${PROJECT_DIRNAME}/deploy
 COPY spider_proxy /${PROJECT_DIRNAME}/spider_proxy
 COPY scrapy.cfg /${PROJECT_DIRNAME}/scrapy.cfg
 COPY entrance.py /${PROJECT_DIRNAME}/entrance.py
