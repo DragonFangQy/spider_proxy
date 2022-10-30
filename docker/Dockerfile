@@ -14,7 +14,6 @@ RUN pip install --upgrade pip &&\
     pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 # add code.
-COPY deploy /${PROJECT_DIRNAME}/deploy
 COPY spider_proxy /${PROJECT_DIRNAME}/spider_proxy
 COPY scrapy.cfg /${PROJECT_DIRNAME}/scrapy.cfg
 COPY entrance.py /${PROJECT_DIRNAME}/entrance.py
