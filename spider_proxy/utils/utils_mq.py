@@ -31,6 +31,15 @@ class Producer(object):
         return pika.BlockingConnection(param)
 
 
-publisher = Producer(PRODUCER_TOPIC, MQ_CONFIG)
+mq_producer = None
+
+def get_mq_producer():
+
+    global mq_producer
+    
+    if not mq_producer:
+        mq_producer = Producer(PRODUCER_TOPIC, MQ_CONFIG)
+        
+    return mq_producer
 
 

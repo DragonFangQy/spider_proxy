@@ -26,7 +26,7 @@ class SpiderProxyModel(BaseModel):
 		self.useable = useable
 
 	def to_string(self):
-		return json.dumps(self.to_dict())
+		return json.dumps(self.to_dict(), ensure_ascii=False)
 
 	def to_dict(self):
 		return {
