@@ -20,4 +20,4 @@ COPY entrance.py /${PROJECT_DIRNAME}/entrance.py
 
 #start
 # CMD cd deploy && sh start.sh
-python entrance.py
+gitpython entrance.py
