@@ -1,10 +1,12 @@
+import os
+
 
 # db config
-DB_HOST = "127.0.0.1"
-DB_PORT = "5432"
-DB_DATABASE = "spider"
-DB_USER = "spider_user"
-DB_PASSWD = "123456"
+DB_HOST = os.environ.get("DB_HOST", "127.0.0.1")
+DB_PORT = os.environ.get("DB_PORT", "5432")
+DB_DATABASE = os.environ.get("DB_PORT", "spider")
+DB_USER = os.environ.get("DB_PORT", "spider_user")
+DB_PASSWD = os.environ.get("DB_PORT", "123456")
 """
 Microsoft SQL Sever	mssql+pymssql://usename:[email protected]:port/dbname
 MySql	mysql+pymysql://username:[email protected]:port/dbname?charset=%s
@@ -21,10 +23,10 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://%s:%s@%s:%s/%s' % (
 )
 
 # MQ config
-MQ_HOST = "127.0.0.1"
-MQ_PORT = 5672
-MQ_EXCHANGE = "spider"
-MQ_VIRTUAL_HOST = "/spider"
+MQ_HOST = os.environ.get("MQ_HOST", "127.0.0.1")
+MQ_PORT = os.environ.get("MQ_PORT", "5672")
+MQ_EXCHANGE = os.environ.get("MQ_EXCHANGE", "spider")
+MQ_VIRTUAL_HOST = os.environ.get("MQ_VIRTUAL_HOST", "/spider")
 
 MQ_CONFIG = {'host': MQ_HOST,
           'port': MQ_PORT,
@@ -32,4 +34,4 @@ MQ_CONFIG = {'host': MQ_HOST,
           "virtual_host": MQ_VIRTUAL_HOST,
       }
 
-PRODUCER_TOPIC = "new_proxy_data"
+PRODUCER_TOPIC = os.environ.get("PRODUCER_TOPIC", "new_proxy_data")
