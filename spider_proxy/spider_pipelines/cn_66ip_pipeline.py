@@ -1,5 +1,4 @@
 import traceback
-import telnetlib
 
 from itemadapter import ItemAdapter
 
@@ -16,7 +15,7 @@ class CN66IPPipeline(BasePipeline):
 
         try:
             # telnetlib.Telnet(host=spider_proxy_model.ip, port=spider_proxy_model.port, timeout=10)
-            self._session_add_model_auto_commit(spider_proxy_model)
+            # self._session_add_model_auto_commit(spider_proxy_model)
             get_mq_producer().send_message(spider_proxy_model.to_string())
 
         except Exception as e:

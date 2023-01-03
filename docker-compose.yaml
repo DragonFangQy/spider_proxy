@@ -1,0 +1,63 @@
+version: '0.1'
+services:
+  spider_proxy:
+    image: spider_proxy:202212041416_678a97477c     
+    container_name: spider_proxy
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      # postgres 
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=spider
+      - DB_USER=spider_user
+      - DB_PASSWD=123456
+
+      # rabbitmq
+      - MQ_HOST=rabbitmq
+      - MQ_PORT=5672
+      - MQ_USER=spider_user
+      - MQ_PWD=123456
+      - MQ_EXCHANGE=spider
+      - MQ_VIRTUAL_HOST=/spider
+  
+
+  postgres:
+    image: postgres:14.6
+    container_name: postgres
+    ports: #端口映射
+      - "5432:5432"
+    restart: always
+    environment:
+      - POSTGRES_DB=spider
+      - POSTGRES_USER=spider_user
+      - POSTGRES_PASSWORD=123456
+
+
+  rabbitmq:
+    image: rabbitmq:3.10
+    container_name: rabbitmq
+    ports:
+      - "15673:15672"
+      - "5673:5672"
+    hostname: rabbitmq
+    restart: always
+    privileged: true
+    environment:
+      - TZ=Asia/Shanghai
+      - LANG=en_US.UTF-8
+      - RABBITMQ_DEFAULT_USER=spider_user
+      - RABBITMQ_DEFAULT_PASS=123456
+      - RABBITMQ_DEFAULT_VHOST=/spider
+      # 集群通信(节点认证作用，集群部署需要同步该值，且值必须相同)
+      # - RABBITMQ_ERLANG_COOKIE=rabbitcookie
+      # 群集中的节点名称必须唯一(在集群中各节点使用节点名称来识别和联系彼此)
+      # - RABBITMQ_NODENAME：rabbitmq01
+      #如果系统使用完全限定的域名(FQDNs)作为主机名，则RabbitMQ节点和CLI工具必须配置为使用所谓的长节点名。对于服务器节点，这是通过将RABBITMQ_USE_LONGNAME环境变量设置为true来实现的。在不重置节点的情况下，无法将其从短名称切换到长名称。
+    volumes:
+      - /Users/dragonfang/Documents/workspace/data/rabbitmq/rabbitmq/:/var/lib/rabbitmq        # 防止log日志报failed to open log file
+      - /Users/dragonfang/Documents/workspace/data/rabbitmq/rabbitmq_log/:/var/log/rabbitmq
+
+
+

@@ -5,7 +5,6 @@ from spider_proxy.spider_common.config import SQLALCHEMY_DATABASE_URI
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=False)
 
-
 def open_session():
     # 创建session
     session_connect = sessionmaker(bind=engine)

@@ -8,7 +8,7 @@ from scrapy import signals, Request
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 
-from spider_proxy.utils.utils_proxy import get_proxy_url
+# from spider_proxy.utils.utils_proxy import get_proxy_url
 
 
 class Cn66IPSpiderMiddleware:

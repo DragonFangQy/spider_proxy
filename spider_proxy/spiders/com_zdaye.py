@@ -5,7 +5,7 @@ import scrapy
 from scrapy import Request, Selector
 from scrapy.http import HtmlResponse
 
-from spider_proxy.utils.utils_proxy import get_proxy_url
+# from spider_proxy.utils.utils_proxy import get_proxy_url
 
 """
 站大爷代理
