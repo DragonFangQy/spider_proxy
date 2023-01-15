@@ -1,0 +1,20 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+172.28.4.101 ssebigdata-nn01.prod ssebigdata-nn01
+172.28.4.102 ssebigdata-nn02.prod ssebigdata-nn02
+172.28.4.103 ssebigdata-dn01.prod ssebigdata-dn01
+172.28.4.104 ssebigdata-dn02.prod ssebigdata-dn02
+172.28.4.105 ssebigdata-dn03.prod ssebigdata-dn03
+172.28.4.106 ssebigdata-dn04.prod ssebigdata-dn04
+172.28.4.107 ssebigdata-dn05.prod ssebigdata-dn05
+172.28.4.108 ds-gw01-serv.prod ds-gw01-serv
+172.28.4.109 ds-gw02-serv.prod ds-gw02-serv
+
+# s2 added
+172.28.4.41 ssebigdata-db01.prod ssebigdata-db01
+172.28.4.42 ssebigdata-db02.prod ssebigdata-db02
+172.28.4.43 ssebigdata-app01.prod ssebigdata-app01
+172.28.4.44 ssebigdata-app02.prod ssebigdata-app02
+172.28.4.45 ssebigdata-app03.prod ssebigdata-app03
+172.28.4.46 ds-gw03-serv.prod ds-gw03-serv
+172.28.4.47 ds-gw04-serv.prod ds-gw04-serv

@@ -1,0 +1,55 @@
+version: '3.7'
+services:
+  sseinfo3_middle_service:
+    hostname: sseinfo3_middle_service
+    image: dockerhub.datagrand.com/idps/sseinfo3_middle_service:latest
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/PROJECT_DIRNAME/app
+    depends_on:
+      - sseinfo3_middle_service_mysql
+    volumes:
+      - ./app:/PROJECT_DIRNAME/app
+      - ./data/web_api/logs:/PROJECT_DIRNAME/app/logs
+      - ./data/rule_extract/data:/PROJECT_DIRNAME/data
+    command: sh deploy/start.sh
+
+  redis:
+    hostname: redis
+    image: redis:latest
+    expose:
+      - "6379"
+    volumes:
+      - ./data/redis:/data
+
+  sseinfo3_middle_service_mysql:
+    hostname: sseinfo3_middle_service_mysql
+    image: mysql:latest
+    volumes:
+      - "./data/mysql/data:/var/lib/mysql"
+      - "./data/mysql/logs:/logs"
+    environment:
+      - MYSQL_DATABASE=test
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=123456
+      - LANG=C.UTF-8
+      - TZ=Asia/Shanghai
+    privileged: true
+    ports:
+      - "3306:3306"
+    command: ['--character-set-server=utf8', '--collation-server=utf8_general_ci']
+
+  sseinfo3_middle_service_tasks:
+    hostname: sseinfo3_middle_service_tasks
+    image: dockerhub.datagrand.com/idps/sseinfo3_middle_service:latest
+    environment:
+      - PYTHONPATH=/PROJECT_DIRNAME/app
+    depends_on:
+      - redis
+      - sseinfo3_middle_service_mysql
+    volumes:
+      - ./app:/PROJECT_DIRNAME/app
+      - ./data/web_api/logs:/PROJECT_DIRNAME/app/logs
+    command: sh deploy/start_worker.sh
