@@ -15,6 +15,7 @@ before_script:
   - export ROOT_PATH=$(pwd)
   - echo 'root path:' $ROOT_PATH
   - echo 'user:' $DOCKER_USER
+  - ls -al
   # - apt-get update
   # - apt-get install -y docker.io
   # - docker version
