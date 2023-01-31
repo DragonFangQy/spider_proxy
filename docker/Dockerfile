@@ -21,6 +21,5 @@ COPY spider_proxy /${PROJECT_DIRNAME}/spider_proxy
 COPY scrapy.cfg /${PROJECT_DIRNAME}/scrapy.cfg
 COPY entrance.py /${PROJECT_DIRNAME}/entrance.py
 
-#start
-# CMD cd deploy && sh start.sh
-CMD python entrance.py
+
+CMD ./run_app.sh
