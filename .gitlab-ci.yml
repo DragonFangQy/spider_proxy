@@ -17,10 +17,10 @@ before_script:
   # - apt-get install -y docker.io
   # - docker version
   # - docker login -u $DOCKER_USER -p $DOCKER_PW
-  # - mkdir $PROJECT_REPO_NAME
-  # - cd $PROJECT_REPO_NAME
-  # - git init
-  # - git remote add origin ssh://git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
+  - mkdir $PROJECT_REPO_NAME
+  - cd $PROJECT_REPO_NAME
+  - git init
+  - git remote add origin ssh://git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
   # - echo 'commit sha:' $CI_COMMIT_SHA
   # - git fetch --depth=1 origin $CI_COMMIT_SHA
   # - git reset --hard FETCH_HEAD
