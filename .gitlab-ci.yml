@@ -13,27 +13,27 @@ before_script:
   - export ROOT_PATH=$(pwd)
   - echo 'root path:' $ROOT_PATH
   - echo 'user:' $DOCKER_USER
-  - apt-get update
-  - apt-get install -y docker.io
-  - docker version
-  - docker login -u $DOCKER_USER -p $DOCKER_PW
-  - mkdir $PROJECT_REPO_NAME
-  - cd $PROJECT_REPO_NAME
-  - git init
-  - git remote add origin ssh://git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
-  - echo 'commit sha:' $CI_COMMIT_SHA
-  - git fetch --depth=1 origin $CI_COMMIT_SHA
-  - git reset --hard FETCH_HEAD
-  - echo 'commit id:' $CI_COMMIT_SHA
-  - echo 'commit user:' $GITLAB_USER_NAME
-  - echo 'commit e-mail:' $GITLAB_USER_EMAIL
-  - export COMMIT_MESSAGE=$(git log -p -1 --pretty=format:"%s"|head -1)
-  - echo 'commit message:' $COMMIT_MESSAGE
-  - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d' $CI_COMMIT_SHA)
-  - echo 'date:' $DATE
-  - export DOCKER_TAG_SUFFIX="release"_$DATE"_"${CI_COMMIT_SHA:0:7}
-  - export DEV_DOCKER_TAG_SUFFIX="release_dev"_$DATE"_"${CI_COMMIT_SHA:0:7}
-  - echo 'docker tag suffix:' $DOCKER_TAG_SUFFIX
+  # - apt-get update
+  # - apt-get install -y docker.io
+  # - docker version
+  # - docker login -u $DOCKER_USER -p $DOCKER_PW
+  # - mkdir $PROJECT_REPO_NAME
+  # - cd $PROJECT_REPO_NAME
+  # - git init
+  # - git remote add origin ssh://git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
+  # - echo 'commit sha:' $CI_COMMIT_SHA
+  # - git fetch --depth=1 origin $CI_COMMIT_SHA
+  # - git reset --hard FETCH_HEAD
+  # - echo 'commit id:' $CI_COMMIT_SHA
+  # - echo 'commit user:' $GITLAB_USER_NAME
+  # - echo 'commit e-mail:' $GITLAB_USER_EMAIL
+  # - export COMMIT_MESSAGE=$(git log -p -1 --pretty=format:"%s"|head -1)
+  # - echo 'commit message:' $COMMIT_MESSAGE
+  # - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d' $CI_COMMIT_SHA)
+  # - echo 'date:' $DATE
+  # - export DOCKER_TAG_SUFFIX="release"_$DATE"_"${CI_COMMIT_SHA:0:7}
+  # - export DEV_DOCKER_TAG_SUFFIX="release_dev"_$DATE"_"${CI_COMMIT_SHA:0:7}
+  # - echo 'docker tag suffix:' $DOCKER_TAG_SUFFIX
 
 
 build:
