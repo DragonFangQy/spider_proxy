@@ -1,10 +1,10 @@
 
 
-cd db_repo 
+cd /spider_proxy/db_repo 
 
 python manage.py version_control
 
 python manage.py upgrade
 
 
-cd ..
+cd /spider_proxy
