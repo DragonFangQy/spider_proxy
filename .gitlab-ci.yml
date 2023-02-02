@@ -16,7 +16,7 @@ before_script:
   - echo 'root path:' $ROOT_PATH
   - echo 'user:' $DOCKER_USER
   # - apt-get update
-  - apt-get install -y docker.io
+  - apt-get install docker-ce docker-ce-cli 
   - docker version
 
   # # - docker login -u $DOCKER_USER -p $DOCKER_PW
