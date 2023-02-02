@@ -12,4 +12,5 @@ from spider_proxy.spider_common.config import SQLALCHEMY_DATABASE_URI
 
 
 if __name__ == '__main__':
+    
     main(url=SQLALCHEMY_DATABASE_URI,repository="./",debug='False')
