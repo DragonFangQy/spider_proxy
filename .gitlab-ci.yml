@@ -1,4 +1,6 @@
 
+image: docker:dind
+
 stages:
   # - test
   # - sonar
@@ -39,7 +41,7 @@ variables:
 
 
 build:
-  image: docker:dind
+  
   stage: build
   script:
 
