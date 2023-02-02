@@ -18,7 +18,7 @@ before_script:
   - ls -al
   # - apt-get update
   # - apt-get install -y docker.io
-  # - docker version
+  - docker version
   # - docker login -u $DOCKER_USER -p $DOCKER_PW
   - mkdir $PROJECT_REPO_NAME
   - cd $PROJECT_REPO_NAME
