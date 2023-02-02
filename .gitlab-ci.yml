@@ -11,12 +11,12 @@ variables:
   PROJECT_REPO_NAME: spider_proxy
 
 
-before_script:
-  - export ROOT_PATH=$(pwd)
-  - echo 'root path:' $ROOT_PATH
-  - echo 'user:' $DOCKER_USER
-  # - apt-get update
-  - docker version
+# before_script:
+#   - export ROOT_PATH=$(pwd)
+#   - echo 'root path:' $ROOT_PATH
+#   - echo 'user:' $DOCKER_USER
+#   # - apt-get update
+#   - docker version
 
   # # - docker login -u $DOCKER_USER -p $DOCKER_PW
   # - mkdir $PROJECT_REPO_NAME
@@ -39,16 +39,24 @@ before_script:
 
 
 build:
+  image: docker:dind
   stage: build
   script:
-    - cd docker
-    - sh build_image.sh $DOCKER_TAG_SUFFIX
 
-build_dev_stage:
-  stage: build_dev
-  script:
-    - cd docker
-    - sh build_dev_image.sh $DEV_DOCKER_TAG_SUFFIX
-  when: manual
+    - export ROOT_PATH=$(pwd)
+    - echo 'root path:' $ROOT_PATH
+    - echo 'user:' $DOCKER_USER
+    # - apt-get update
+    - docker version
+
+    # - cd docker
+    # - sh build_image.sh $DOCKER_TAG_SUFFIX
+
+# build_dev_stage:
+#   stage: build_dev
+#   script:
+#     - cd docker
+#     - sh build_dev_image.sh $DEV_DOCKER_TAG_SUFFIX
+  # when: manual
 
 
