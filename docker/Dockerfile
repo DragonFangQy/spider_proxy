@@ -4,7 +4,7 @@ ENV PROJECT_DIRNAME="spider_proxy"
 
 # prepare install
 RUN mkdir /${PROJECT_DIRNAME}&&\
-        apt-get update --allow-releaseinfo-change && apt-get -y install gcc libkrb5-dev  python3-dev
+        apt-get update --allow-releaseinfo-change && apt-get -y install gcc libkrb5-dev libpq-dev python3-dev
 
 WORKDIR /${PROJECT_DIRNAME}
 COPY requirements/requirements.txt /${PROJECT_DIRNAME}/requirements.txt
@@ -17,7 +17,8 @@ RUN chmod -R 777 docker/ db_repo/ &&\
     pip3 config --global set install.trusted-host mirrors.aliyun.com &&\
     pip3 install --upgrade pip &&\
     pip3 install -r requirements.txt
-    # pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+# RUN pip3 uninstall pyOpenSSL &&\
+#     pip3 install pyOpenSSL==22.0.0
 
 # add code.
 COPY spider_proxy /${PROJECT_DIRNAME}/spider_proxy
