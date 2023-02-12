@@ -46,7 +46,7 @@ build:
     - export ROOT_PATH=$(pwd)
     - echo 'root path:' $ROOT_PATH
     - echo 'user:' $DOCKER_USER
-    - docker version
+    - ls -alh
     - cd docker
     - sh build_image.sh $DOCKER_TAG_SUFFIX
 
