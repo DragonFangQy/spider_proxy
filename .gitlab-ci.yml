@@ -21,7 +21,7 @@ before_script:
   - export ROOT_PATH=$(pwd)
   - echo 'root path:' $ROOT_PATH
   - echo 'user:' $DOCKER_USER
-  - docker version
+  - ls -alh
   # - docker login -u $DOCKER_USER -p $DOCKER_PW
   - mkdir $PROJECT_REPO_NAME
   - cd $PROJECT_REPO_NAME
