@@ -17,7 +17,8 @@ variables:
 
 
 before_script:
-  - docker info
+  - docker version
+  - apt-get install git
   - git --version
 
 build:
