@@ -18,7 +18,6 @@ variables:
 
 before_script:
   - docker version
-  - apt-get install git
   - git --version
 
 build:
@@ -28,7 +27,6 @@ build:
 
     - export ROOT_PATH=$(pwd)
     - echo 'root path:' $ROOT_PATH
-    - echo 'user:' $DOCKER_USER
 
 # build_dev_stage:
 #   stage: build_dev
