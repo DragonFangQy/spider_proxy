@@ -21,7 +21,7 @@ before_script:
   - git --version
   # - docker login -u $DOCKER_USER -p $DOCKER_PW http://dockerhub.datagrand.com
   - echo 'CI_COMMIT_REF_NAME _value:' $CI_COMMIT_REF_NAME
-  - git clone -b $CI_COMMIT_REF_NAME --depth=1 ssh://git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
+  - git clone -b $CI_COMMIT_REF_NAME --depth=1 git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
   - cd $PROJECT_REPO_NAME
   - ls -lh
 
