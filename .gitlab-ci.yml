@@ -19,6 +19,9 @@ variables:
 before_script:
   # - docker login -u $DOCKER_USER -p $DOCKER_PW http://dockerhub.datagrand.com
   - echo 'CI_COMMIT_REF_NAME _value:' $CI_COMMIT_REF_NAME
+  - echo 'PROJECT_REPO_NAMESPACE _value:' $PROJECT_REPO_NAMESPACE
+  - echo 'PROJECT_REPO_NAME _value:' $PROJECT_REPO_NAME
+  - echo 'all  _value:' git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
   - git clone -b $CI_COMMIT_REF_NAME --depth=1 git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
   - cd $PROJECT_REPO_NAME
   - ls -lh
