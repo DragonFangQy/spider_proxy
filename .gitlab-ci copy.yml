@@ -1,0 +1,73 @@
+stages:
+#  - test
+  - sonar
+  - build
+  - deploy
+
+variables:
+  GIT_STRATEGY: none
+  PROJECT_REPO_NAMESPACE: idps
+  PROJECT_REPO_NAME: web_api
+  DEPLOYMENT_REPO_NAMESPACE: idps
+  DEPLOYMENT_REPO_NAME: deploy_idps_stable
+  DEPLOYMENT_BRANCH: develop
+
+before_script:
+  - export ROOT_PATH=$(pwd)
+  - echo 'root path:' $ROOT_PATH
+  - docker login -u $DOCKER_USER -p $DOCKER_PW http://dockerhub.datagrand.com
+#  - mkdir $PROJECT_REPO_NAME
+  - git clone -b $CI_COMMIT_REF_NAME --depth=1 ssh://git@git.datagrand.com:58422/$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
+  - cd $PROJECT_REPO_NAME
+  - source ./docker/ci_docker.conf
+  - echo 'commit id:' $CI_COMMIT_SHA
+  - echo 'commit user:' $GITLAB_USER_NAME
+  - echo 'commit e-mail:' $GITLAB_USER_EMAIL
+  - export COMMIT_MESSAGE=$(git log -p -1 --pretty=format:"%s"|head -1)
+  - echo 'commit message:' $COMMIT_MESSAGE
+  - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d' $CI_COMMIT_SHA)
+  - echo 'date:' $DATE
+  - export DOCKER_TAG_SUFFIX="ci"_$DATE"_"${CI_COMMIT_SHA:0:8}
+  - echo 'docker tag suffix:' $DOCKER_TAG_SUFFIX
+
+#test_stage:
+#  stage: test
+#  script:
+#    - sh tests/environment/run_test.sh
+#  allow_failure: false
+
+sonar_stage:
+  stage: sonar
+  script:
+    - cd docker
+    - sh sonar.sh
+  only:
+    - master
+    - develop
+    - release
+
+build_stage:
+  stage: build
+  script:
+    - cd docker
+    - sh ci_docker_script.sh $DOCKER_TAG_SUFFIX
+
+deploy:
+  stage: deploy
+  script:
+    - cd $ROOT_PATH
+    - git clone -b $DEPLOYMENT_BRANCH --single-branch --depth 1 ssh://git@git.datagrand.com:58422/$DEPLOYMENT_REPO_NAMESPACE/$DEPLOYMENT_REPO_NAME.git
+    - cd $DEPLOYMENT_REPO_NAME
+    - sed -i "s/\($DOCKER_IMAGE_NAME:\ release_\)\(.*\)/\1$DOCKER_TAG_SUFFIX/g" vars/image.yml
+    - if [ -n "$(git status --porcelain)" ]; then
+    -   git config --local user.email "${GITLAB_USER_EMAIL}"
+    -   git config --local user.name "${GITLAB_USER_NAME}"
+    -   git add vars/image.yml
+    -   git commit -m "${COMMIT_MESSAGE}"
+    -   git push
+    - else
+    -   echo "nothing to commit"
+    - fi
+  allow_failure: false
+  only:
+    - release
