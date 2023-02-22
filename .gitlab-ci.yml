@@ -28,6 +28,7 @@ before_script:
   - ls -al ~/.ssh
   - pwd
   - git --version 
+  - export
   - git clone -b $CI_COMMIT_REF_NAME --depth=1 git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
   - cd $PROJECT_REPO_NAME
   - ls -lh
