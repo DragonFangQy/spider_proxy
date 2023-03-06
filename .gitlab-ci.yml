@@ -19,11 +19,10 @@ variables:
 before_script:
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
   - eval $(ssh-agent -s)
-  - echo '_value:' $SSH_PRIVATE_KEY # | tr -d '\r' | ssh-add -> /dev/null
-  - cat ~/.ssh/id_rsa 
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
-  - echo '_value:' $SSH_KNOWN_HOSTS # > ~/.ssh/known_hosts
+  - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
   - ls -al ~/.ssh
   - pwd
@@ -31,7 +30,7 @@ before_script:
   - git clone -b $CI_COMMIT_REF_NAME --depth=1 git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
   - cd $PROJECT_REPO_NAME
   - ls -lh
-  
+
 
 build:
   
