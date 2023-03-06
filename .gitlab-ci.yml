@@ -42,6 +42,8 @@ build:
     - echo 'build start:' $DOCKER_TAG_SUFFIX 
     - sh build_image.sh $DOCKER_TAG_SUFFIX
     - echo 'build end:' $DOCKER_TAG_SUFFIX 
+    - cd ../../
+    - rm -rf *
 
 
 # build_dev_stage:
