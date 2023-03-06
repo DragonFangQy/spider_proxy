@@ -34,10 +34,11 @@ build:
   script:
     - export ROOT_PATH=$(pwd)
     - echo 'root path:' $ROOT_PATH 
-    - cd docker
-    - echo 'build start:' $DEV_DOCKER_TAG_SUFFIX 
-    - sh build_dev_image.sh $DEV_DOCKER_TAG_SUFFIX
-    - echo 'build end:' $DEV_DOCKER_TAG_SUFFIX 
+    - ls -lh
+    # - cd docker
+    # - echo 'build start:' $DEV_DOCKER_TAG_SUFFIX 
+    # - sh build_dev_image.sh $DEV_DOCKER_TAG_SUFFIX
+    # - echo 'build end:' $DEV_DOCKER_TAG_SUFFIX 
 
 # build_dev_stage:
 #   stage: build_dev
