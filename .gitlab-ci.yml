@@ -38,9 +38,9 @@ build:
     - cd docker
     - echo 'date:' $DATE
     - export DOCKER_TAG_SUFFIX="ci"_$DATE"_"${CI_COMMIT_SHA:0:8}
-    - echo 'build start:' $DEV_DOCKER_TAG_SUFFIX 
-    - sh build_image.sh $DEV_DOCKER_TAG_SUFFIX
-    - echo 'build end:' $DEV_DOCKER_TAG_SUFFIX 
+    - echo 'build start:' $DOCKER_TAG_SUFFIX 
+    - sh build_image.sh $DOCKER_TAG_SUFFIX
+    - echo 'build end:' $DOCKER_TAG_SUFFIX 
 
 
 # build_dev_stage:
