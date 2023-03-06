@@ -37,7 +37,7 @@ build:
     - ls -lh
     - cd docker
     - echo 'build start:' $DEV_DOCKER_TAG_SUFFIX 
-    - sh build_dev_image.sh $DEV_DOCKER_TAG_SUFFIX
+    - sh build_image.sh $DEV_DOCKER_TAG_SUFFIX
     - echo 'build end:' $DEV_DOCKER_TAG_SUFFIX 
 
 # build_dev_stage:
