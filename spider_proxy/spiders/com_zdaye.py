@@ -15,7 +15,7 @@ class ComZdayeSpider(scrapy.Spider):
     allowed_domains = ['zdaye.com']
     # start_urls = ['http://zdaye.com/']
 
-    page_total = [1, 2, 3, 4, 5]
+    page_total = [1, 2]
     url_format = "https://www.zdaye.com/dayProxy/{year}/{month}/{page}.html"
 
     init_page_total = False
@@ -29,20 +29,26 @@ class ComZdayeSpider(scrapy.Spider):
         # 当前月份
         current_datetime = datetime.datetime.now()
 
+        headers_dict = {
+            "Referer": "https://www.zdaye.com/",
+            "Origin": "https://www.zdaye.com",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.44",
+        }
+
         for i in range(self.diff_month):
 
             current_datetime_list = current_datetime.strftime("%Y-%m").split("-")
 
             for page in self.page_total:
                 print("月份 %s,page_total：%s,当前 page：%s" % (current_datetime.month, self.page_total, page))
-                yield Request(url=self.url_format.format(year=current_datetime_list[0], month=current_datetime_list[1], page=page + 1))
+                yield Request(url=self.url_format.format(year=current_datetime_list[0], headers=headers_dict, month=current_datetime_list[1], page=page))
 
             # 上个月
             pre_month_datetime = datetime.date(current_datetime.year, current_datetime.month, 1) + datetime.timedelta(days=-1)
             current_datetime = datetime.date(pre_month_datetime.year, pre_month_datetime.month, 1)
 
     def parse(self, response: HtmlResponse, **kwargs):
-
+        print("func parse")
         select_obj = Selector(response)
 
         page_num = self._get_page_num(select_obj)
@@ -81,11 +87,12 @@ class ComZdayeSpider(scrapy.Spider):
 
             page_url = response.urljoin(source_url)
 
-            self.proxy_url = get_proxy_url()
-            print("proxy_url add_detail_url_by_parent: %s" % self.proxy_url)
+            # self.proxy_url = get_proxy_url()
+            # print("proxy_url add_detail_url_by_parent: %s" % self.proxy_url)
 
             yield Request(url=page_url, callback=self.parse_detail
-                          , headers=response.request.headers, meta=response.request.meta.update({"proxy": self.proxy_url}))
+                          , headers=response.request.headers)
+                        #   , headers=response.request.headers, meta=response.request.meta.update({"proxy": self.proxy_url}))
 
     def add_detail_url_by_parent(self, select_obj, response):
         """
@@ -99,13 +106,14 @@ class ComZdayeSpider(scrapy.Spider):
         posts_list_div = select_obj.xpath("""//div[@id="J_posts_list"]""")
         detail_page_url_list = posts_list_div.xpath(""".//div[@class="thread_item"]//h3/a/@href""")
 
-        self.proxy_url = get_proxy_url()
-        print("proxy_url add_detail_url_by_parent: %s" % self.proxy_url)
+        # self.proxy_url = get_proxy_url()
+        # print("proxy_url add_detail_url_by_parent: %s" % self.proxy_url)
         
         for detail_page_url in detail_page_url_list:
             detail_page_url_compplete = response.urljoin(detail_page_url.extract()).replace(".html", "/1.html")
             yield Request(url=detail_page_url_compplete, callback=self.parse_detail
-                          , headers=response.request.headers, meta=response.request.meta.update({"proxy": self.proxy_url}))
+                          , headers=response.request.headers)
+                        #   , headers=response.request.headers, meta=response.request.meta.update({"proxy": self.proxy_url}))
 
     def _set_page_total(self, page_num):
         for page in range(1, page_num + 1):
