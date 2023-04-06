@@ -5,20 +5,20 @@ from itemloaders.processors import TakeFirst
 from spider_proxy.spider_items.cn_66ip_item import Cn66IPItem, Cn66IPItemEnum
 
 
-class Cn66ipSpider(scrapy.Spider):
-    name = 'cn_66ip'
-    allowed_domains = ['66ip.cn']
-    # start_urls = ['http://66ip.cn/']
+class Cn89ipSpider(scrapy.Spider):
+    name = 'cn_89ip'
+    allowed_domains = ['89ip.cn']
+    # start_urls = ['http://89ip.cn/']
 
-    page_total = [1, 2, 3, 4, 5]
-    url_format = "http://www.66ip.cn/{page}.html"
+    page_total = [1, 2]
+    url_format = "http://www.89ip.cn/index_{page}.html"
 
     init_page_total = False
 
     def start_requests(self):
         for page in self.page_total:
             print("page_total：%s,当前 page：%s" % (len(self.page_total), page))
-            yield Request(url=self.url_format.format(page=page + 1))
+            yield Request(url=self.url_format.format(page=page))
 
     def parse(self, response):
 
@@ -28,7 +28,7 @@ class Cn66ipSpider(scrapy.Spider):
         self._set_page_total(page_num)
 
         # 找到页面中的表格，从表格中获取数据
-        tr_so_list = select_obj.xpath("""//div[@id="main"]//div[@align="center"] //table//tr[position()>1]""")
+        tr_so_list = select_obj.xpath("""//div[@class="layui-col-md8"] //table[@class='layui-table']//tr[position()>1]""")
 
         for tr_so in tr_so_list:
 
@@ -53,7 +53,7 @@ class Cn66ipSpider(scrapy.Spider):
 
         # 从分页器获取 最后五个分页器（实际上2个基本就够用了），
         # 3 4 。。。。18 19 最后一页 ；这种情况 19 才是我们要的页码，最后一页只是一个按钮
-        page_num_so_list = select_obj.xpath("//div[@class='mypage']//div[@id='PageList']/a[position()>last()-5]")
+        page_num_so_list = select_obj.xpath("//div[@class='layui-row layui-col-space15']//div[@id='layui-laypage-1']/a[position()>last()-5]")
 
         page_num_list = []
         for page_num_so in page_num_so_list:
