@@ -1,5 +1,5 @@
 
-# image: docker:20.10.16
+image: ubuntu:22.04
 
 services:
   - ubuntu:22.04
