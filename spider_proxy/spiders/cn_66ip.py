@@ -1,19 +1,21 @@
 import scrapy
+import re
 from scrapy import Request, Selector
 from scrapy.loader import ItemLoader
 from itemloaders.processors import TakeFirst
 from spider_proxy.spider_items.cn_66ip_item import Cn66IPItem, Cn66IPItemEnum
+from spider_proxy.spiders.base_spider import BaseSpider
 
 
-class Cn66ipSpider(scrapy.Spider):
+class Cn66ipSpider(BaseSpider):
     name = 'cn_66ip'
     allowed_domains = ['66ip.cn']
-    # start_urls = ['http://66ip.cn/']
 
-    page_total = [1, 2, 3, 4, 5]
-    url_format = "http://www.66ip.cn/{page}.html"
+    def get_url_format(self):
+        return "http://www.66ip.cn/{page}.html"
 
-    init_page_total = False
+    def get_re_compile(self):
+        return re.compile("http://www.66ip.cn/(?P<page>\d+).html")
 
     def start_requests(self):
         for page in self.page_total:
@@ -21,26 +23,7 @@ class Cn66ipSpider(scrapy.Spider):
             yield Request(url=self.url_format.format(page=page + 1))
 
     def parse(self, response):
-
-        select_obj = Selector(response, type="html")
-
-        page_num = self._get_page_num(select_obj)
-        self._set_page_total(page_num)
-
-        # 找到页面中的表格，从表格中获取数据
-        tr_so_list = select_obj.xpath("""//div[@id="main"]//div[@align="center"] //table//tr[position()>1]""")
-
-        for tr_so in tr_so_list:
-
-            "ip	端口号	代理位置	代理类型	验证时间"
-            item = Cn66IPItem()
-            item_loader = ItemLoader(item=item, selector=tr_so)
-            item_loader.default_output_processor = TakeFirst()
-            item_loader.add_xpath(Cn66IPItemEnum.ip.value, "./td[position()=1]/text()")
-            item_loader.add_xpath(Cn66IPItemEnum.port.value, "./td[position()=2]/text()")
-            item_loader.add_xpath(Cn66IPItemEnum.location.value, "./td[position()=3]/text()")
-            item_loader.add_xpath(Cn66IPItemEnum.anonymity_type.value, "./td[position()=4]/text()")
-            yield item_loader.load_item()
+        yield from self.parse_data(response=response)
 
     @staticmethod
     def _get_page_num(select_obj):
@@ -66,30 +49,37 @@ class Cn66ipSpider(scrapy.Spider):
             page_num = page_num_list[-1]
         return page_num
 
-    def _set_page_total(self, page_num):
-        for page in range(1, page_num + 1):
-            if page not in self.page_total:
-                self.page_total.append(page)
+    def parse_data(self,*args, **kwargs):
 
-
-
-class Cn66ipSpiderTest(scrapy.Spider):
-    pass
-
-
-class Cn66ipSpiderTest1(scrapy.Spider):
-    def __init__(self, name=None, **kwargs):
-        super().__init__(name, **kwargs)
+        response = kwargs["response"]
         
-    class  Cn66ipSpiderTest2(scrapy.Spider):
+        select_obj = Selector(response, type="html")
+
+        page_num = self._get_page_num(select_obj)
         
-        def func():
-            pass 
+        # 通过阈值终止抓取
+        if len(self.empty_page_list) <= self.empty_page_threshold:
+            self._set_page_total(page_num)
 
-def func():
-    pass
+        # 找到页面中的表格，从表格中获取数据
+        tr_so_list = select_obj.xpath("""//div[@id="main"]//div[@align="center"]//table//tr[position()>1]""")
 
-def func_test():
+        # 遇到空页面，记录page
+        if not len(tr_so_list):
+            page_num_match = self.re_compile.match(response.url)
+            page_num_dict = page_num_match.groupdict()
+            page_num = page_num_dict.get("page", "unknown")
+            
+            self.empty_page_list.append(page_num)
 
-    def func_test_1():
-        pass
+        for tr_so in tr_so_list:
+
+            "ip	端口号	代理位置	代理类型	验证时间"
+            item = Cn66IPItem()
+            item_loader = ItemLoader(item=item, selector=tr_so)
+            item_loader.default_output_processor = TakeFirst()
+            item_loader.add_xpath(Cn66IPItemEnum.ip.value, "./td[position()=1]/text()")
+            item_loader.add_xpath(Cn66IPItemEnum.port.value, "./td[position()=2]/text()")
+            item_loader.add_xpath(Cn66IPItemEnum.location.value, "./td[position()=3]/text()")
+            item_loader.add_xpath(Cn66IPItemEnum.anonymity_type.value, "./td[position()=4]/text()")
+            yield item_loader.load_item()

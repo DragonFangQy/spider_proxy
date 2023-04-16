@@ -23,7 +23,9 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://%s:%s@%s:%s/%s' % (
 )
 
 
-# MQ config
+# MQ config   
+# account   guest
+# pwd       guest
 MQ_HOST = os.environ.get("MQ_HOST", "127.0.0.1")
 MQ_PORT = os.environ.get("MQ_PORT", "5672")
 MQ_USER = os.environ.get("MQ_USER", "spider_user")
