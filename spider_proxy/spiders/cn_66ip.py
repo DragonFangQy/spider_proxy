@@ -70,3 +70,26 @@ class Cn66ipSpider(scrapy.Spider):
         for page in range(1, page_num + 1):
             if page not in self.page_total:
                 self.page_total.append(page)
+
+
+
+class Cn66ipSpiderTest(scrapy.Spider):
+    pass
+
+
+class Cn66ipSpiderTest1(scrapy.Spider):
+    def __init__(self, name=None, **kwargs):
+        super().__init__(name, **kwargs)
+        
+    class  Cn66ipSpiderTest2(scrapy.Spider):
+        
+        def func():
+            pass 
+
+def func():
+    pass
+
+def func_test():
+
+    def func_test_1():
+        pass
