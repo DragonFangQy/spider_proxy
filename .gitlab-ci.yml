@@ -11,7 +11,7 @@ stages:
   # - build_dev
 
 variables:
-  GIT_STRATEGY: clone
+  GIT_STRATEGY: none
   PROJECT_REPO_NAMESPACE: spider1
   PROJECT_REPO_NAME: spider_proxy
 
