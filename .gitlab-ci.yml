@@ -25,7 +25,7 @@ before_script:
   # - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
   # - chmod 644 ~/.ssh/known_hosts
   # - 
-  - ls -al /usr/bin/
+  - ls -al
   - pwd
   - ls -al /usr/bin/ | grep git
   - git --version
