@@ -49,9 +49,7 @@ class Cn66ipSpider(BaseSpider):
             page_num = page_num_list[-1]
         return page_num
 
-    def parse_data(self,*args, **kwargs):
-
-        response = kwargs["response"]
+    def parse_data(self,response, *args, **kwargs):
         
         select_obj = Selector(response, type="html")
 
