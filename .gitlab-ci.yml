@@ -1,8 +1,8 @@
 
-image: docker:20.10.16
+# image: ubuntu:22.04
 
-services:
-  - docker:20.10.16-dind
+# services:
+#   - ubuntu:22.04
 
 stages:
   # - test
@@ -17,16 +17,20 @@ variables:
 
 
 before_script:
-  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-  - eval $(ssh-agent -s)
-  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
-  - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-  - chmod 644 ~/.ssh/known_hosts
+  # - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  # - eval $(ssh-agent -s)
+  # - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  # - mkdir -p ~/.ssh
+  # - chmod 700 ~/.ssh
+  # - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+  # - chmod 644 ~/.ssh/known_hosts
+  # - 
+  - ls -al
   - pwd
-  - git clone -b $CI_COMMIT_REF_NAME --depth=1 git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
-  - cd $PROJECT_REPO_NAME
+  # - ls -al /usr/bin/ | grep git
+  # - git --version
+  # - git clone -b $CI_COMMIT_REF_NAME --depth=1 git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
+  # - cd $PROJECT_REPO_NAME
 
 
 build:
@@ -36,14 +40,14 @@ build:
     - echo 'root path:' $ROOT_PATH 
     - ls -lh
     - cd docker
-    - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d' $CI_COMMIT_SHA)
+    # - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d' $CI_COMMIT_SHA)
     - echo 'date:' $DATE
     - export DOCKER_TAG_SUFFIX="ci"_$DATE"_"${CI_COMMIT_SHA:0:8}
     - echo 'build start:' $DOCKER_TAG_SUFFIX 
     - sh build_image.sh $DOCKER_TAG_SUFFIX
     - echo 'build end:' $DOCKER_TAG_SUFFIX 
     - cd ../../
-    - rm -rf *
+    # - rm -rf *
 
 
 # build_dev_stage:
