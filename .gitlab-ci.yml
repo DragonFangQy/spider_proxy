@@ -35,10 +35,8 @@ build:
     - ls -lh
     - pwd
     - cd docker
-
-    - ls -lh /builds/spider1/spider_proxy/docker
-
-    # - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d' $CI_COMMIT_SHA)
+    - ls -lh
+    - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d' $CI_COMMIT_SHA)
     - echo 'date:' $DATE
     - export DOCKER_TAG_SUFFIX="ci"_$DATE"_"${CI_COMMIT_SHA:0:8}
     - echo 'build start:' $DOCKER_TAG_SUFFIX 
