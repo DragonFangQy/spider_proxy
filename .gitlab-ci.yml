@@ -34,8 +34,8 @@ build:
     - echo 'root path:' $ROOT_PATH 
     - ls -lh
     - cd docker
-    
-    - ls -lh docker
+
+    - ls -lh /builds/spider1/spider_proxy/docker
 
     # - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d' $CI_COMMIT_SHA)
     - echo 'date:' $DATE
