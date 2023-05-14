@@ -7,5 +7,5 @@ tag=${tag_suffix}
 image="spider_proxy":${tag}
 
 echo "docker build"
-docker build -t ${image} docker/Dockerfile .
+docker build -t ${image} -f docker/Dockerfile .
 # push_image ${image}
