@@ -32,9 +32,8 @@ build:
   script:
     - export ROOT_PATH=$(pwd)
     - echo 'root path:' $ROOT_PATH 
-    - cd $ROOT_PATH 
+    - ls -lh
     - cd docker
-    - ls -l docker
     # - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d' $CI_COMMIT_SHA)
     - echo 'date:' $DATE
     - export DOCKER_TAG_SUFFIX="ci"_$DATE"_"${CI_COMMIT_SHA:0:8}
