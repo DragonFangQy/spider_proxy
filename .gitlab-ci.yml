@@ -11,20 +11,20 @@ stages:
   # - build_dev
 
 variables:
-  GIT_STRATEGY: none
+  GIT_STRATEGY: fetch
   PROJECT_REPO_NAMESPACE: spider1
   PROJECT_REPO_NAME: spider_proxy
 
 
 before_script:
-  - eval "$(ssh-agent -s)"
+  # - eval "$(ssh-agent -s)"
   - pwd
   # - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
   # - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
   # - chmod 644 ~/.ssh/known_hosts
   # - ls -al ~/.ssh/
-  - git clone -b $CI_COMMIT_REF_NAME --depth=1 git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
-  - cd $PROJECT_REPO_NAME
+  # - git clone -b $CI_COMMIT_REF_NAME --depth=1 git@jihulab.com:$PROJECT_REPO_NAMESPACE/$PROJECT_REPO_NAME.git
+  # - cd $PROJECT_REPO_NAME
 
 
 build:
