@@ -32,7 +32,7 @@ build:
   script:
     - export ROOT_PATH=$(pwd)
     - echo 'root path:' $ROOT_PATH 
-    - ls -lh
+    - cd $ROOT_PATH 
     - cd docker
     - ls -l docker
     # - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d' $CI_COMMIT_SHA)
