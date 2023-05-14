@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 build_image(){
     if [[ $# != 3 ]]; then

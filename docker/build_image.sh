@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
 tag_suffix=$1
 # sh util_function.sh
 source util_function.sh
