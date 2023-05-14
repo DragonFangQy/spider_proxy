@@ -17,7 +17,8 @@ variables:
 
 
 before_script:
-  - ssh-agent bash
+  # - exec ssh-agent bash
+  - eval "$(exec ssh-agent bash)"
   - pwd
   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
   - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
