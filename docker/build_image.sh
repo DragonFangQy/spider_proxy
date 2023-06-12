@@ -11,4 +11,6 @@ image="spider_proxy":${tag}
 echo "docker build"
 # docker build -t ${image} -f docker/Dockerfile .
 build_image ${image} docker/Dockerfile .
-# push_image ${image}
+push_image ${image}
+
+echo ${image}
