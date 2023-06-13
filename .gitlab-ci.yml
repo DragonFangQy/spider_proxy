@@ -16,10 +16,10 @@ variables:
   PROJECT_REPO_NAME: spider_proxy
 
 
-before_script:
+# before_script:
   # - eval "$(ssh-agent -s)"
   # - eval "$(bash)"
-  - pwd
+  # - pwd
   # - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
   # - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
   # - chmod 644 ~/.ssh/known_hosts
@@ -39,7 +39,7 @@ build:
     - export DOCKER_TAG_SUFFIX="ci"_$DATE"_"${CI_COMMIT_SHA:0:8}
     - echo 'build start:' $DOCKER_TAG_SUFFIX 
     - bash build_image.sh $DOCKER_TAG_SUFFIX
-    - echo 'build end:' $DOCKER_TAG_SUFFIX 
+    # - echo 'build end:' $DOCKER_TAG_SUFFIX 
     
     # - rm -rf *
 

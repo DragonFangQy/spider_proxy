@@ -11,6 +11,6 @@ image="workdragonfang/spider_proxy":${tag}
 echo "docker build"
 # docker build -t ${image} -f docker/Dockerfile .
 build_image ${image} docker/Dockerfile .
-docker login 
+docker login -u $DockerUname -p $DockerUpwd
 docker push ${image} 
 echo ${image}
