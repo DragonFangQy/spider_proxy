@@ -34,7 +34,7 @@ build:
     - export ROOT_PATH=$(pwd)
     - echo 'root path:' $ROOT_PATH
     - cd docker
-    - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d' $CI_COMMIT_SHA)
+    - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d_%H%M%S' $CI_COMMIT_SHA)
     - echo 'date:' $DATE
     - export DOCKER_TAG_SUFFIX="ci"_$DATE"_"${CI_COMMIT_SHA:0:8}
     - echo 'build start:' $DOCKER_TAG_SUFFIX 
