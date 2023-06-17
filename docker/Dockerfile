@@ -15,8 +15,8 @@ COPY db_repo/ /${PROJECT_DIRNAME}/db_repo/
 RUN chmod -R 777 docker/ db_repo/ &&\
     pip3 config --global set global.index-url https://mirrors.aliyun.com/pypi/simple/ &&\
     pip3 config --global set install.trusted-host mirrors.aliyun.com &&\
-    pip3 install --upgrade pip &&\
-    pip3 install -r requirements.txt
+    pip3 install --quiet --upgrade pip &&\
+    pip3 install --quiet -r requirements.txt
 # RUN pip3 uninstall pyOpenSSL &&\
 #     pip3 install pyOpenSSL==22.0.0
 
