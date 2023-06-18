@@ -7,8 +7,9 @@ import scrapy
 class BaseSpider(scrapy.Spider, metaclass=ABCMeta):
     # name = 'cn_66ip'
     # allowed_domains = ['66ip.cn']
-
-    page_total = [1, 2]
+    
+    start_page_num = 1  # 默认从1 开始
+    page_total = [i for i in range(start_page_num, start_page_num + 3)]
 
     url_format = None
     re_compile = None
@@ -41,11 +42,10 @@ class BaseSpider(scrapy.Spider, metaclass=ABCMeta):
     def parse_data(self,*args, **kwargs):
         pass
     
-    @abstractmethod
-    def _get_page_num(select_obj):
+    def _get_page_num(self, select_obj):
         pass
 
     def _set_page_total(self, page_num):
-        for page in range(1, page_num + 1):
+        for page in range(self.start_page_num, page_num + 1):
             if page not in self.page_total:
                 self.page_total.append(page)

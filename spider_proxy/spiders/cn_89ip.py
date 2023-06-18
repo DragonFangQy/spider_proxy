@@ -11,11 +11,15 @@ class Cn89ipSpider(BaseSpider):
     name = 'cn_89ip'
     allowed_domains = ['89ip.cn']
     
+    # test
+    # page_total = [50,51]
+    # start_page_num = 50
+
     def get_url_format(self):
         return "http://www.89ip.cn/index_{page}.html"
 
     def get_re_compile(self):
-        return re.compile("http://www.66ip.cn/index_(?P<page>\d+).html")
+        return re.compile("https://www.89ip.cn/index_(?P<page>\d+).html")
     
     def start_requests(self):
         for page in self.page_total:
@@ -46,8 +50,7 @@ class Cn89ipSpider(BaseSpider):
         
         yield from self.parse_data(response=response)
 
-    @staticmethod
-    def _get_page_num(select_obj):
+    def _get_page_num(self, select_obj):
         """
         获取页数
 
@@ -65,7 +68,7 @@ class Cn89ipSpider(BaseSpider):
                 page_num_list.append(int(page_num_so.xpath("./text()").extract_first()))
             except Exception as e:
                 continue
-        page_num = 1
+        page_num = self.start_page_num
         if len(page_num_list) > 1:
             page_num = page_num_list[-1]
         return page_num
@@ -91,6 +94,9 @@ class Cn89ipSpider(BaseSpider):
             page_num = page_num_dict.get("page", "unknown")
             
             self.empty_page_list.append(page_num)
+        else:
+            # 空页面不连续则重置
+            self.empty_page_list = []
 
         for tr_so in tr_so_list:
 

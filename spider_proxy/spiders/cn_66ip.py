@@ -25,8 +25,7 @@ class Cn66ipSpider(BaseSpider):
     def parse(self, response):
         yield from self.parse_data(response=response)
 
-    @staticmethod
-    def _get_page_num(select_obj):
+    def _get_page_num(self, select_obj):
         """
         获取页数
 
@@ -44,7 +43,7 @@ class Cn66ipSpider(BaseSpider):
                 page_num_list.append(int(page_num_so.xpath("./text()").extract_first()))
             except Exception as e:
                 continue
-        page_num = 1
+        page_num = self.start_page_num
         if len(page_num_list) > 1:
             page_num = page_num_list[-1]
         return page_num
