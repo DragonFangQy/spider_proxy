@@ -1,9 +1,4 @@
 
-# image: ubuntu:22.04
-
-# services:
-#   - ubuntu:22.04
-
 stages:
   # - test
   # - sonar
@@ -16,10 +11,10 @@ variables:
   PROJECT_REPO_NAME: spider_proxy
 
 
-before_script:
+# before_script:
   # - eval "$(ssh-agent -s)"
   # - eval "$(bash)"
-  - pwd
+  # - pwd
   # - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
   # - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
   # - chmod 644 ~/.ssh/known_hosts
@@ -32,22 +27,13 @@ build:
   stage: build
   script:
     - export ROOT_PATH=$(pwd)
-    - echo 'root path:' $ROOT_PATH 
-    - ls -lh
-    - pwd
+    - echo 'root path:' $ROOT_PATH
     - cd docker
-    - ls -lh
-    - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d' $CI_COMMIT_SHA)
+    - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d_%H%M%S' $CI_COMMIT_SHA)
     - echo 'date:' $DATE
     - export DOCKER_TAG_SUFFIX="ci"_$DATE"_"${CI_COMMIT_SHA:0:8}
     - echo 'build start:' $DOCKER_TAG_SUFFIX 
-    - docker images
     - bash build_image.sh $DOCKER_TAG_SUFFIX
-    - echo 'build end:' $DOCKER_TAG_SUFFIX 
-    - docker images
-    - cd ../../
-    # - rm -rf *
-
 
 # build_dev_stage:
 #   stage: build_dev
