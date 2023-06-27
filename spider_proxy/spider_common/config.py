@@ -42,3 +42,8 @@ MQ_CONFIG = {'host': MQ_HOST,
       }
 
 PRODUCER_TOPIC = os.environ.get("PRODUCER_TOPIC", "new_proxy_data")
+
+CONCURRENT_REQUESTS = int(os.environ.get("CONF_CONCURRENT_REQUESTS", "16"))
+DOWNLOAD_DELAY = int(os.environ.get("CONF_DOWNLOAD_DELAY", "3"))
+AUTOTHROTTLE_START_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_START_DELAY", "3"))
+AUTOTHROTTLE_MAX_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_MAX_DELAY", "10"))
