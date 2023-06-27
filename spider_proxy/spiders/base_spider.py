@@ -3,13 +3,15 @@
 from abc import ABCMeta, abstractmethod
 import scrapy
 
+from spider_proxy.spider_common import config
+
 
 class BaseSpider(scrapy.Spider, metaclass=ABCMeta):
     # name = 'cn_66ip'
     # allowed_domains = ['66ip.cn']
     
     start_page_num = 1  # 默认从1 开始
-    page_total = [i for i in range(start_page_num, start_page_num + 3)]
+    page_total = [i for i in range(start_page_num, start_page_num + config.INIT_PAGE_SIZE)]
 
     url_format = None
     re_compile = None
