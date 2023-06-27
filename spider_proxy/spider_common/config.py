@@ -41,7 +41,7 @@ MQ_CONFIG = {'host': MQ_HOST,
           "pwd": MQ_PWD,
       }
 
-PRODUCER_TOPIC = os.environ.get("CONF_PRODUCER_TOPIC", "new_proxy_data")
+PRODUCER_TOPIC = os.environ.get("MQ_PRODUCER_TOPIC", "new_proxy_data")
 
 CONCURRENT_REQUESTS = int(os.environ.get("CONF_CONCURRENT_REQUESTS", "16"))
 DOWNLOAD_DELAY = int(os.environ.get("CONF_DOWNLOAD_DELAY", "3"))
