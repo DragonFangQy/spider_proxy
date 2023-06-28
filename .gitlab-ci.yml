@@ -1,6 +1,3 @@
-tags: 
-  - docker
-  
 stages:
   # - test
   # - sonar
@@ -27,6 +24,8 @@ variables:
 
 build:
   stage: build
+  tags: 
+    - docker
   script:
     - export ROOT_PATH=$(pwd)
     - echo 'root path:' $ROOT_PATH
