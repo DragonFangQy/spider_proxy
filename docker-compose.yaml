@@ -1,27 +1,5 @@
 version: '0.1'
 services:
-  spider_proxy:
-    image: spider_proxy:202212041416_678a97477c     
-    container_name: spider_proxy
-    depends_on:
-      - postgres
-      - rabbitmq
-    environment:
-      # postgres 
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_DATABASE=spider
-      - DB_USER=spider_user
-      - DB_PASSWD=123456
-
-      # rabbitmq
-      - MQ_HOST=rabbitmq
-      - MQ_PORT=5672
-      - MQ_USER=spider_user
-      - MQ_PWD=123456
-      - MQ_EXCHANGE=spider
-      - MQ_VIRTUAL_HOST=/spider
-  
 
   postgres:
     image: postgres:14.6
@@ -39,8 +17,8 @@ services:
     image: rabbitmq:3.10
     container_name: rabbitmq
     ports:
-      - "15673:15672"
-      - "5673:5672"
+      - "15672:15672"
+      - "5672:5672"
     hostname: rabbitmq
     restart: always
     privileged: true

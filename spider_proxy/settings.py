@@ -31,7 +31,7 @@ DOWNLOAD_DELAY = config.DOWNLOAD_DELAY
 RANDOMIZE_DOWNLOAD_DELAY = True
 
 # The download delay setting will honor only one of:
-# CONCURRENT_REQUESTS_PER_DOMAIN = 2
+CONCURRENT_REQUESTS_PER_DOMAIN = config.CONF_CONCURRENT_REQUESTS_PER_DOMAIN
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
