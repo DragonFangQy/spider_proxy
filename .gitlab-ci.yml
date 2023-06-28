@@ -1,6 +1,6 @@
-tags: ["build"]
+tags: 
+  - docker
   
-
 stages:
   # - test
   # - sonar
