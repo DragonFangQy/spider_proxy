@@ -5,6 +5,8 @@ from scrapy.utils.project import get_project_settings
 if __name__ == '__main__':
 
     counter = 0
+
+    time.sleep(15)
     while True:
         settings = get_project_settings()
 
