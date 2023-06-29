@@ -25,7 +25,11 @@ if __name__ == '__main__':
             traceback.print_exc()
 
         counter+=1
+        print("=="*10)
+        print("\n\n")
         print(f"counter: {counter}")
         time.sleep(3600)
+        print("\n\n")
+        print("=="*10)
 
  
