@@ -8,15 +8,21 @@ if __name__ == '__main__':
 
     time.sleep(15)
     while True:
-        settings = get_project_settings()
+        try:
 
-        crawler = CrawlerProcess(settings)
+            settings = get_project_settings()
 
-        # crawler.crawl('com_zdaye')
-        crawler.crawl('cn_66ip')
-        crawler.crawl('cn_89ip')
+            crawler = CrawlerProcess(settings)
 
-        crawler.start()
+            # crawler.crawl('com_zdaye')
+            crawler.crawl('cn_66ip')
+            crawler.crawl('cn_89ip')
+
+            crawler.start()
+        
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
 
         counter+=1
         print(f"counter: {counter}")
