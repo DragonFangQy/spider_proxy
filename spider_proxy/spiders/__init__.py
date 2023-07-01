@@ -5,11 +5,10 @@
 
 """
 
-66免费代理网 http://www.66ip.cn/
-89免费代理 http://www.89ip.cn/
+66免费代理网     http://www.66ip.cn/                完成
+89免费代理       http://www.89ip.cn/                完成
+方法SEO         https://proxy.seofangfa.com        完成
 
-# 方法SEO
-https://proxy.seofangfa.com
 # 高可用全球免费代理IP库
 https://ip.jiangxianli.com/blog.html?page=4
 
