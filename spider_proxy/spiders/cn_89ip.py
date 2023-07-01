@@ -26,28 +26,7 @@ class Cn89ipSpider(BaseSpider):
             print("page_total：%s,当前 page：%s" % (len(self.page_total), page))
             yield Request(url=self.url_format.format(page=page))
 
-    def parse(self, response):
-
-        # select_obj = Selector(response, type="html")
-
-        # page_num = self._get_page_num(select_obj)
-        # self._set_page_total(page_num)
-
-        # # 找到页面中的表格，从表格中获取数据
-        # tr_so_list = select_obj.xpath("""//div[@class="layui-col-md8"] //table[@class='layui-table']//tr[position()>1]""")
-
-        # for tr_so in tr_so_list:
-
-        #     "ip	端口号	代理位置	代理类型	验证时间"
-        #     item = Cn66IPItem()
-        #     item_loader = ItemLoader(item=item, selector=tr_so)
-        #     item_loader.default_output_processor = TakeFirst()
-        #     item_loader.add_xpath(Cn66IPItemEnum.ip.value, "./td[position()=1]/text()")
-        #     item_loader.add_xpath(Cn66IPItemEnum.port.value, "./td[position()=2]/text()")
-        #     item_loader.add_xpath(Cn66IPItemEnum.location.value, "./td[position()=3]/text()")
-        #     item_loader.add_xpath(Cn66IPItemEnum.anonymity_type.value, "./td[position()=4]/text()")
-        #     yield item_loader.load_item()
-        
+    def parse(self, response):        
         yield from self.parse_data(response=response)
 
     def _get_page_num(self, select_obj):
