@@ -11,6 +11,11 @@ from spider_proxy.spiders.base_spider import BaseSpider
 class ComSeofangfaipSpider(BaseSpider):
     name = 'com_seofangfa'
     allowed_domains = ['seofangfa.com']
+    custom_settings={
+        "DOWNLOAD_DELAY": 300, 
+        "AUTOTHROTTLE_START_DELAY":300, 
+        "AUTOTHROTTLE_MAX_DELAY": 300
+        }
     
     # test
     # page_total = [50,51]
@@ -23,12 +28,10 @@ class ComSeofangfaipSpider(BaseSpider):
         return re.compile("https://www.89ip.cn/index_(?P<page>\d+).html")
     
     def start_requests(self):
-        count_num = 0
-        while True:
-            # 十分钟访问一次
-            time.sleep(600)
-            count_num+=1
-            yield Request(url=self.url_format.format(count_num=count_num))
+        for page in self.page_total:
+            print("page_total：%s,当前 page：%s" % (len(self.page_total), page))
+            yield Request(url=self.url_format.format(count_num=page))
+            self.page_total.append(len(self.page_total))
 
     def parse(self, response):
 
