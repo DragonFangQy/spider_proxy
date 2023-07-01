@@ -16,6 +16,7 @@ services:
   rabbitmq:
     image: rabbitmq:3.10
     container_name: rabbitmq
+    command: bash -c " cd /etc/rabbitmq/conf.d/ && echo management_agent.disable_metrics_collector = false > management_agent.disable_metrics_collector.conf && cd / && rabbitmq-plugins enable rabbitmq_management && rabbitmq-server "
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -36,6 +37,7 @@ services:
     volumes:
       - /Users/dragonfang/Documents/workspace/data/rabbitmq/rabbitmq/:/var/lib/rabbitmq        # 防止log日志报failed to open log file
       - /Users/dragonfang/Documents/workspace/data/rabbitmq/rabbitmq_log/:/var/log/rabbitmq
+      - /Users/dragonfang/Documents/workspace/data/rabbitmq/rabbitmq_etc/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
 
 
 
