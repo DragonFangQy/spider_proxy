@@ -119,3 +119,17 @@ dmypy.json
 
 
 .vscode
+
+
+servers/calculate-asu-monitor/config/zrcc.json
+servers/calculate-asu-monitor/config/Settings.xml
+
+
+.devcontainer /devcontainer.json
+
+static_folder/*
+
+# history 插件
+.history
+.lh
+.idea
