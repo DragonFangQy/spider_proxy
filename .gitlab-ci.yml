@@ -24,6 +24,9 @@ variables:
 
 build:
   stage: build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
   tags: 
     - docker
   script:

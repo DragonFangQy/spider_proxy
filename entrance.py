@@ -1,26 +1,36 @@
-# from scrapy.cmdline import execute
-# import os
-# import sys
-
-# if __name__ == '__main__':
-#     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-#     # execute(['scrapy','crawl','com_zdaye']) # Test
-#     execute(['scrapy','crawl','cn_66ip'])
-#     # execute(['scrapy','crawl','cn_89ip'])
-
-
-
-
+import time
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
 if __name__ == '__main__':
-    settings = get_project_settings()
 
-    crawler = CrawlerProcess(settings)
+    counter = 0
 
-    # crawler.crawl('com_zdaye')
-    crawler.crawl('cn_66ip')
-    crawler.crawl('cn_89ip')
+    time.sleep(15)
+    while True:
+        try:
 
-    crawler.start()
+            settings = get_project_settings()
+
+            crawler = CrawlerProcess(settings)
+
+            # crawler.crawl('com_zdaye')
+            crawler.crawl('cn_66ip')
+            crawler.crawl('cn_89ip')
+            crawler.crawl('com_seofangfa') 
+
+            crawler.start()
+        
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+
+        counter+=1
+        print("=="*10)
+        print("\n\n")
+        print(f"counter: {counter}")
+        time.sleep(3600)
+        print("\n\n")
+        print("=="*10)
+
+ 

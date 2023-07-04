@@ -43,8 +43,13 @@ MQ_CONFIG = {'host': MQ_HOST,
 
 PRODUCER_TOPIC = os.environ.get("MQ_PRODUCER_TOPIC", "new_proxy_data")
 
-CONCURRENT_REQUESTS = int(os.environ.get("CONF_CONCURRENT_REQUESTS", "16"))
+
+LOG_LEVEL = os.environ.get("CONF_LOG_LEVEL", "INFO")
+
+
+CONCURRENT_REQUESTS = int(os.environ.get("CONF_CONCURRENT_REQUESTS", "3"))
 DOWNLOAD_DELAY = int(os.environ.get("CONF_DOWNLOAD_DELAY", "3"))
 AUTOTHROTTLE_START_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_START_DELAY", "3"))
 AUTOTHROTTLE_MAX_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_MAX_DELAY", "10"))
-INIT_PAGE_SIZE = int(os.environ.get("CONF_INIT_PAGE_SIZE", "50"))
+INIT_PAGE_SIZE = int(os.environ.get("CONF_INIT_PAGE_SIZE", "5"))
+CONCURRENT_REQUESTS_PER_DOMAIN = int(os.environ.get("CONF_CONCURRENT_REQUESTS_PER_DOMAIN", "10"))

@@ -15,6 +15,8 @@ class SpiderProxyModel(BaseModel):
 	location = Column(String(100), default="", nullable=False, comment="位置(归属地)")
 	network_operator = Column(String(100), default="", nullable=False, comment="网络运营商")
 	useable = Column(Integer, default=1, nullable=False, comment="是否可用")
+	telnet_num_1 = Column(Integer, default=0, nullable=False, comment="telnet 次数")
+	telnet_num_0 = Column(Integer, default=0, nullable=False, comment="telnet 次数")
 
 	def __init__(self, ip, port, protocol="http", location="", anonymity_type="", network_operator="", useable=1):
 		self.protocol = protocol

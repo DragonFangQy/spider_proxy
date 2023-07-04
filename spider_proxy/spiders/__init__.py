@@ -4,17 +4,13 @@
 # your spiders.
 
 """
-66 免费代理
-http://www.66ip.cn/
-# 站大爷
-https://www.zdaye.com/dayProxy/2022/8/1.html
-# 方法SEO
-https://proxy.seofangfa.com/
+
+66免费代理网     http://www.66ip.cn/                完成
+89免费代理       http://www.89ip.cn/                完成
+方法SEO         https://proxy.seofangfa.com        完成
+
 # 高可用全球免费代理IP库
 https://ip.jiangxianli.com/blog.html?page=4
-# 开心代理
-http://www.kxdaili.com/dailiip/2/1.html
-
 
 # https://openproxy.space/list
 # https://www.proxy-list.download/HTTP
@@ -37,8 +33,6 @@ http://www.kxdaili.com/dailiip/2/1.html
 
 
 免费代理IP http://ip.yqie.com/ipproxy.htm
-66免费代理网 http://www.66ip.cn/
-89免费代理 http://www.89ip.cn/
 无忧代理 http://www.data5u.com/
 云代理 http://www.ip3366.net/
 快代理 https://www.kuaidaili.com/free/
