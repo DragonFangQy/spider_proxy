@@ -91,12 +91,3 @@ mq_producer = get_mq_producer()
 
 def get_mq_customer(queue_name, on_message_callback, prefetch_count):
     return Customer(queue_name, PRODUCER_TOPIC, MQ_CONFIG, on_message_callback, prefetch_count)
-
-# config = {'host': '127.0.0.1',
-#           'port': 5672,
-#           'exchange': 'spider',
-#           "virtual_host": "/spider",
-#           }
-
-# mq_customer = Customer('hello', 'topic_02', config)
-# mq_customer.setup()
