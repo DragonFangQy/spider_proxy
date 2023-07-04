@@ -54,7 +54,7 @@ class Customer(object):
                                           , port=self.config['port']
                                           , virtual_host=self.config['virtual_host']
                                           , credentials=credentials
-                                          , heartbeat = 0
+                                          , heartbeat = 120
                                           )
         return pika.BlockingConnection(parameters)
 
