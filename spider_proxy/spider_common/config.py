@@ -53,3 +53,29 @@ AUTOTHROTTLE_START_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_START_DELAY", "
 AUTOTHROTTLE_MAX_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_MAX_DELAY", "10"))
 INIT_PAGE_SIZE = int(os.environ.get("CONF_INIT_PAGE_SIZE", "5"))
 CONCURRENT_REQUESTS_PER_DOMAIN = int(os.environ.get("CONF_CONCURRENT_REQUESTS_PER_DOMAIN", "10"))
+
+
+KAFKA_BROKER = os.environ.get("CONF_KAFKA_BROKER", "192.168.43.90:9095")
+KAFKA_TOPIC = os.environ.get("CONF_KAFKA_TOPIC", "spider_topic")
+KAFKA_GROUP = os.environ.get("CONF_KAFKA_GROUP", "test_topic_consumer_group_0001")
+KAFKA_POLL_TIMEOUT = int(os.environ.get("CONF_KAFKA_TOPIC", "5"))
+KAFKA_POLL_NONE_SLEEP = int(os.environ.get("CONF_KAFKA_TOPIC", "5"))
+
+# # kafka 每生产 100 次消息，log 一次
+KAFKA_LOGS_ONCE = int(os.environ.get("CONF_KAFKA_LOGS_ONCE", "10000"))
+
+KAFKA_PRODUCER_CONF = { 
+    "bootstrap.servers": KAFKA_BROKER,
+    "compression.type":"gzip", 
+}
+
+KAFKA_CONSUMER_CONF = { 
+    "bootstrap.servers": KAFKA_BROKER,
+    "group.id": KAFKA_GROUP,
+    "session.timeout.ms": 6000,
+    "auto.offset.reset": "earliest",
+    "enable.auto.offset.store": False, 
+}
+ 
+
+
