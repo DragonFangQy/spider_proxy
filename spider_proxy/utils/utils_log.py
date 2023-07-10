@@ -6,9 +6,9 @@ from logging.handlers import TimedRotatingFileHandler
 import re
 import time
 
+
 # log的根目录（项目目录）
 log_root_dir = os.path.dirname(os.path.dirname( os.path.dirname(__file__) ))
-
 
 # 控制日志输出路径，必须包含 logging.INFO
 level_log_path = {
