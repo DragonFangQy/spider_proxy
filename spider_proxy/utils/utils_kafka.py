@@ -17,8 +17,7 @@ from spider_proxy.utils.utils_log import logger
 class KafkaProducer(object):
 
     def __init__(self) -> None:
-
-        self.kafka_producer = Producer(**config.KAFKA_PRODUCER_CONF, logger=logger)
+        self.kafka_producer = Producer(**config.KAFKA_PRODUCER_CONF)# , logger=logging.Logger)
     
 
     def delivery_callback(self, err, msg):
@@ -86,7 +85,7 @@ class KafkaConsumer(object):
 
     def __init__(self, topics, on_assign=None, on_revoke=None, on_lost=None, auto_consume=False) -> None:
         
-        self.kafka_consumer = Consumer(**config.KAFKA_CONSUMER_CONF, logger=logger)
+        self.kafka_consumer = Consumer(**config.KAFKA_CONSUMER_CONF)# , logger=logger)
         self.kafka_consumer.subscribe(topics, on_assign=on_assign, on_revoke=on_revoke, on_lost=on_lost)
         self.run_status = True
         if auto_consume:
@@ -188,7 +187,7 @@ class KafkaConsumer(object):
             c.close()
 
 
-
+kafka_producer = KafkaProducer()
 
 if __name__ == "__main__":
     # kafka_producer = KafkaProducer()

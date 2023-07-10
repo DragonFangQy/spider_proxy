@@ -1,4 +1,4 @@
-version: '0.1'
+version: '3.5'
 services:
 
   postgres:
@@ -40,4 +40,35 @@ services:
       - /Users/dragonfang/Documents/workspace/data/rabbitmq/rabbitmq_etc/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
 
 
+# docker pull bitnami/kafka:3.5.0
 
+  kafka:
+    image: bitnami/kafka:3.5.0
+    container_name: kafka
+    ports:
+      - "9095:9095"
+    volumes:
+      - /Users/dragonfang/Documents/workspace/data/kafka/data:/bitnami/kafka:rw
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@0.0.0.0:9096
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9095,CONTROLLER://:9096,CLIENT://:9096,BROKER://:9096
+      # - KAFKA_CFG_INTER_BROKER_LISTENER_NAMES=PLAINTEXT://:9095,CONTROLLER://:9096
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.43.90:9095
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,CLIENT:PLAINTEXT,BROKER:PLAINTEXT
+      - KAFKA_KRAFT_CLUSTER_ID=LelM2dIFQkiUFvXCEcqRWA
+      - ALLOW_PLAINTEXT_LISTENER=yes
+
+# # docker pull bitnami/kafka-exporter:1.7.0
+#   kafka_exporter:
+#     image: bitnami/kafka-exporter:1.7.0
+#     container_name: kafka_exporter
+#     ports:
+#       - "9038:9038"
+#     # environment:
+#     #   - kafka_server=kafka:9096
+#     depends_on:
+#       - kafka

@@ -55,8 +55,9 @@ INIT_PAGE_SIZE = int(os.environ.get("CONF_INIT_PAGE_SIZE", "5"))
 CONCURRENT_REQUESTS_PER_DOMAIN = int(os.environ.get("CONF_CONCURRENT_REQUESTS_PER_DOMAIN", "10"))
 
 
-KAFKA_BROKER = os.environ.get("CONF_KAFKA_BROKER", "192.168.43.90:9095")
+KAFKA_BROKER = os.environ.get("CONF_KAFKA_BROKER", "192.168.0.103:9095")
 KAFKA_TOPIC = os.environ.get("CONF_KAFKA_TOPIC", "spider_topic")
+KAFKA_TOPIC = os.environ.get("CONF_KAFKA_TOPIC", "test_topic")
 KAFKA_GROUP = os.environ.get("CONF_KAFKA_GROUP", "test_topic_consumer_group_0001")
 KAFKA_POLL_TIMEOUT = int(os.environ.get("CONF_KAFKA_TOPIC", "5"))
 KAFKA_POLL_NONE_SLEEP = int(os.environ.get("CONF_KAFKA_TOPIC", "5"))
@@ -67,6 +68,7 @@ KAFKA_LOGS_ONCE = int(os.environ.get("CONF_KAFKA_LOGS_ONCE", "10000"))
 KAFKA_PRODUCER_CONF = { 
     "bootstrap.servers": KAFKA_BROKER,
     "compression.type":"gzip", 
+    "security.protocol": "PLAINTEXT",
 }
 
 KAFKA_CONSUMER_CONF = { 
