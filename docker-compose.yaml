@@ -13,31 +13,31 @@ services:
       - POSTGRES_PASSWORD=123456
 
 
-  rabbitmq:
-    image: rabbitmq:3.10
-    container_name: rabbitmq
-    command: bash -c " cd /etc/rabbitmq/conf.d/ && echo management_agent.disable_metrics_collector = false > management_agent.disable_metrics_collector.conf && cd / && rabbitmq-plugins enable rabbitmq_management && rabbitmq-server "
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    hostname: rabbitmq
-    restart: always
-    privileged: true
-    environment:
-      - TZ=Asia/Shanghai
-      - LANG=en_US.UTF-8
-      - RABBITMQ_DEFAULT_USER=spider_user
-      - RABBITMQ_DEFAULT_PASS=123456
-      - RABBITMQ_DEFAULT_VHOST=/spider
-      # 集群通信(节点认证作用，集群部署需要同步该值，且值必须相同)
-      # - RABBITMQ_ERLANG_COOKIE=rabbitcookie
-      # 群集中的节点名称必须唯一(在集群中各节点使用节点名称来识别和联系彼此)
-      # - RABBITMQ_NODENAME：rabbitmq01
-      #如果系统使用完全限定的域名(FQDNs)作为主机名，则RabbitMQ节点和CLI工具必须配置为使用所谓的长节点名。对于服务器节点，这是通过将RABBITMQ_USE_LONGNAME环境变量设置为true来实现的。在不重置节点的情况下，无法将其从短名称切换到长名称。
-    volumes:
-      - /Users/dragonfang/Documents/workspace/data/rabbitmq/rabbitmq/:/var/lib/rabbitmq        # 防止log日志报failed to open log file
-      - /Users/dragonfang/Documents/workspace/data/rabbitmq/rabbitmq_log/:/var/log/rabbitmq
-      - /Users/dragonfang/Documents/workspace/data/rabbitmq/rabbitmq_etc/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+  # rabbitmq:
+  #   image: rabbitmq:3.10
+  #   container_name: rabbitmq
+  #   command: bash -c " cd /etc/rabbitmq/conf.d/ && echo management_agent.disable_metrics_collector = false > management_agent.disable_metrics_collector.conf && cd / && rabbitmq-plugins enable rabbitmq_management && rabbitmq-server "
+  #   ports:
+  #     - "15672:15672"
+  #     - "5672:5672"
+  #   hostname: rabbitmq
+  #   restart: always
+  #   privileged: true
+  #   environment:
+  #     - TZ=Asia/Shanghai
+  #     - LANG=en_US.UTF-8
+  #     - RABBITMQ_DEFAULT_USER=spider_user
+  #     - RABBITMQ_DEFAULT_PASS=123456
+  #     - RABBITMQ_DEFAULT_VHOST=/spider
+  #     # 集群通信(节点认证作用，集群部署需要同步该值，且值必须相同)
+  #     # - RABBITMQ_ERLANG_COOKIE=rabbitcookie
+  #     # 群集中的节点名称必须唯一(在集群中各节点使用节点名称来识别和联系彼此)
+  #     # - RABBITMQ_NODENAME：rabbitmq01
+  #     #如果系统使用完全限定的域名(FQDNs)作为主机名，则RabbitMQ节点和CLI工具必须配置为使用所谓的长节点名。对于服务器节点，这是通过将RABBITMQ_USE_LONGNAME环境变量设置为true来实现的。在不重置节点的情况下，无法将其从短名称切换到长名称。
+  #   volumes:
+  #     - /Users/dragonfang/Documents/workspace/data/rabbitmq/rabbitmq/:/var/lib/rabbitmq        # 防止log日志报failed to open log file
+  #     - /Users/dragonfang/Documents/workspace/data/rabbitmq/rabbitmq_log/:/var/log/rabbitmq
+  #     - /Users/dragonfang/Documents/workspace/data/rabbitmq/rabbitmq_etc/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
 
 
 # docker pull bitnami/kafka:3.5.0
@@ -50,17 +50,17 @@ services:
     volumes:
       - /Users/dragonfang/Documents/workspace/data/kafka/data:/bitnami/kafka:rw
     environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_ENABLE_KRAFT=yes
       - KAFKA_CFG_PROCESS_ROLES=broker,controller
       - KAFKA_CFG_NODE_ID=1
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@0.0.0.0:9096
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9095,CONTROLLER://:9096,CLIENT://:9096,BROKER://:9096
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9095,CONTROLLER://:9096
       # - KAFKA_CFG_INTER_BROKER_LISTENER_NAMES=PLAINTEXT://:9095,CONTROLLER://:9096
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.43.90:9095
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9095  
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,CLIENT:PLAINTEXT,BROKER:PLAINTEXT
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_KRAFT_CLUSTER_ID=LelM2dIFQkiUFvXCEcqRWA
-      - ALLOW_PLAINTEXT_LISTENER=yes
 
 # # docker pull bitnami/kafka-exporter:1.7.0
 #   kafka_exporter:
