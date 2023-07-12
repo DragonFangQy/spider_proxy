@@ -55,7 +55,7 @@ INIT_PAGE_SIZE = int(os.environ.get("CONF_INIT_PAGE_SIZE", "5"))
 CONCURRENT_REQUESTS_PER_DOMAIN = int(os.environ.get("CONF_CONCURRENT_REQUESTS_PER_DOMAIN", "10"))
 
 
-KAFKA_BROKER = os.environ.get("CONF_KAFKA_BROKER", "127.0.0.1:9095")
+KAFKA_BROKER = os.environ.get("CONF_KAFKA_BROKER", "8.218.227.109:9095")
 KAFKA_TOPIC = os.environ.get("CONF_KAFKA_TOPIC", "spider_topic")
 KAFKA_TOPIC = os.environ.get("CONF_KAFKA_TOPIC", "test_topic")
 KAFKA_GROUP = os.environ.get("CONF_KAFKA_GROUP", "test_topic_consumer_group_0001")
