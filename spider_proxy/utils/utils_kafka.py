@@ -17,8 +17,7 @@ from spider_proxy.utils.utils_log import logger
 class KafkaProducer(object):
 
     def __init__(self) -> None:
-
-        self.kafka_producer = Producer(**config.KAFKA_PRODUCER_CONF, logger=logger)
+        self.kafka_producer = Producer(**config.KAFKA_PRODUCER_CONF)# , logger=logging.Logger)
     
 
     def delivery_callback(self, err, msg):
@@ -32,7 +31,18 @@ class KafkaProducer(object):
                 logger.info(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
 
 
-    def send_message_value(self, message_list):
+    def send_message_single(self, message):
+        
+        if isinstance(message, dict): 
+            message = json.dumps(message) 
+        elif not isinstance(message, str):
+            raise ValueError("message_list element not meet the requirement")
+        self.kafka_producer.produce(config.KAFKA_TOPIC, message, callback=self.delivery_callback)
+        self.kafka_producer.poll(config.KAFKA_POLL_TIMEOUT)
+        self.kafka_producer.flush()
+
+
+    def send_message_values(self, message_list):
         
         for message in message_list:
 
@@ -44,9 +54,9 @@ class KafkaProducer(object):
             self.kafka_producer.poll(config.KAFKA_POLL_TIMEOUT)
 
         self.kafka_producer.flush()
-        
 
-    def send_message_kv(self, message_dict):
+
+    def send_message_kvalues(self, message_dict):
         
         for message_key, message_value in message_dict.items():
             if not isinstance(message_key, str):
@@ -86,7 +96,7 @@ class KafkaConsumer(object):
 
     def __init__(self, topics, on_assign=None, on_revoke=None, on_lost=None, auto_consume=False) -> None:
         
-        self.kafka_consumer = Consumer(**config.KAFKA_CONSUMER_CONF, logger=logger)
+        self.kafka_consumer = Consumer(**config.KAFKA_CONSUMER_CONF)# , logger=logger)
         self.kafka_consumer.subscribe(topics, on_assign=on_assign, on_revoke=on_revoke, on_lost=on_lost)
         self.run_status = True
         if auto_consume:
@@ -188,7 +198,7 @@ class KafkaConsumer(object):
             c.close()
 
 
-
+kafka_producer = KafkaProducer()
 
 if __name__ == "__main__":
     # kafka_producer = KafkaProducer()
