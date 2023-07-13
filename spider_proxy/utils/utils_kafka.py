@@ -31,7 +31,18 @@ class KafkaProducer(object):
                 logger.info(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
 
 
-    def send_message_value(self, message_list):
+    def send_message_single(self, message):
+        
+        if isinstance(message, dict): 
+            message = json.dumps(message) 
+        elif not isinstance(message, str):
+            raise ValueError("message_list element not meet the requirement")
+        self.kafka_producer.produce(config.KAFKA_TOPIC, message, callback=self.delivery_callback)
+        self.kafka_producer.poll(config.KAFKA_POLL_TIMEOUT)
+        self.kafka_producer.flush()
+
+
+    def send_message_values(self, message_list):
         
         for message in message_list:
 
@@ -43,9 +54,9 @@ class KafkaProducer(object):
             self.kafka_producer.poll(config.KAFKA_POLL_TIMEOUT)
 
         self.kafka_producer.flush()
-        
 
-    def send_message_kv(self, message_dict):
+
+    def send_message_kvalues(self, message_dict):
         
         for message_key, message_value in message_dict.items():
             if not isinstance(message_key, str):

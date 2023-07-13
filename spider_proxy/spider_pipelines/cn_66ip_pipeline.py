@@ -18,7 +18,16 @@ class CN66IPPipeline(BasePipeline):
             # telnetlib.Telnet(host=spider_proxy_model.ip, port=spider_proxy_model.port, timeout=10)
             # self._session_add_model_auto_commit(spider_proxy_model)
             # get_mq_producer().send_message(spider_proxy_model.to_string())
-            kafka_producer.send_message_value(spider_proxy_model.to_string())
+            
+            # 通过 strip 去除特殊字符
+            spider_proxy_model.ip               = spider_proxy_model.ip               .strip()
+            spider_proxy_model.port             = spider_proxy_model.port             .strip()
+            spider_proxy_model.protocol         = spider_proxy_model.protocol         .strip()
+            spider_proxy_model.anonymity_type   = spider_proxy_model.anonymity_type   .strip()
+            spider_proxy_model.location         = spider_proxy_model.location         .strip()
+            spider_proxy_model.network_operator = spider_proxy_model.network_operator .strip()
+
+            kafka_producer.send_message_single(spider_proxy_model.to_string())
 
         except Exception as e:
             traceback.print_exc()
