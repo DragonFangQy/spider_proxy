@@ -7,8 +7,8 @@ import time
 
 from confluent_kafka import Producer, Consumer, KafkaException
 
-from telnet_proxy.common import config
-from telnet_proxy.utils.utils_log import logger
+from spider_proxy.spider_common import config
+from spider_proxy.utils.utils_log import logger
 
 
 class KafkaProducer(object):
@@ -26,6 +26,17 @@ class KafkaProducer(object):
             div, mod = divmod(msg.partition(), config.KAFKA_LOGS_ONCE)
             if mod == 0:
                 logger.info(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
+
+
+    def send_message_single(self, message):
+        
+        if isinstance(message, dict): 
+            message = json.dumps(message) 
+        elif not isinstance(message, str):
+            raise ValueError("message_list element not meet the requirement")
+        self.kafka_producer.produce(config.KAFKA_TOPIC, message, callback=self.delivery_callback)
+        self.kafka_producer.poll(config.KAFKA_POLL_TIMEOUT)
+        self.kafka_producer.flush()
 
 
     def send_message_value(self, message_list):
