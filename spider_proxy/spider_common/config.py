@@ -58,9 +58,9 @@ CONCURRENT_REQUESTS_PER_DOMAIN = int(os.environ.get("CONF_CONCURRENT_REQUESTS_PE
 KAFKA_BROKER = os.environ.get("CONF_KAFKA_BROKER", "8.218.227.109:9095")
 KAFKA_TOPIC = os.environ.get("CONF_KAFKA_TOPIC", "spider_topic")
 KAFKA_TOPIC = os.environ.get("CONF_KAFKA_TOPIC", "test_topic")
-KAFKA_GROUP = os.environ.get("CONF_KAFKA_GROUP", "test_topic_consumer_group_0001")
-KAFKA_POLL_TIMEOUT = int(os.environ.get("CONF_KAFKA_TOPIC", "5"))
-KAFKA_POLL_NONE_SLEEP = int(os.environ.get("CONF_KAFKA_TOPIC", "5"))
+KAFKA_GROUP = os.environ.get("CONF_KAFKA_CONSUMER_GROUP", "test_topic_consumer_group_0001")
+KAFKA_POLL_TIMEOUT = int(os.environ.get("CONF_KAFKA_POLL_TIMEOUT", "5"))
+KAFKA_POLL_NONE_SLEEP = int(os.environ.get("CONF_POLL_NONE_SLEEP", "5"))
 
 # # kafka 每生产 100 次消息，log 一次
 KAFKA_LOGS_ONCE = int(os.environ.get("CONF_KAFKA_LOGS_ONCE", "10000"))
