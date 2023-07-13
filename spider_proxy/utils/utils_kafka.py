@@ -8,7 +8,7 @@ import time
 from confluent_kafka import Producer, Consumer, KafkaException
 
 from spider_proxy.spider_common import config
-from spider_proxy.utils.utils_log import logger
+# from spider_proxy.utils.utils_log import logger
 
 
 class KafkaProducer(object):
@@ -20,12 +20,15 @@ class KafkaProducer(object):
     def delivery_callback(self, err, msg):
 
         if err:
-            logger.exception(f"message failed delivery: {err}")
+            print(f"message failed delivery: {err}")
+            # logger.exception(f"message failed delivery: {err}")
         else:
-            logger.debug(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
+            print(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
+            # logger.debug(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
             div, mod = divmod(msg.partition(), config.KAFKA_LOGS_ONCE)
             if mod == 0:
-                logger.info(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
+                print(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
+                # logger.info(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
 
 
     def send_message_single(self, message):
