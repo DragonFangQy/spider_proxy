@@ -1,4 +1,4 @@
-FROM python:3.10.8
+FROM workdragonfang/docker_build_python:3_10_9_v_103
 
 ENV PROJECT_DIRNAME="spider_proxy"
 
