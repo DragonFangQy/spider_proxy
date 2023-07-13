@@ -5,13 +5,10 @@ import sys
 import logging
 import time
 
-
 from confluent_kafka import Producer, Consumer, KafkaException
-from confluent_kafka.schema_registry.json_schema import JSONSerializer, JSONDeserializer
 
-
-from spider_proxy.spider_common import config
-from spider_proxy.utils.utils_log import logger
+from telnet_proxy.common import config
+from telnet_proxy.utils.utils_log import logger
 
 
 class KafkaProducer(object):
@@ -31,18 +28,7 @@ class KafkaProducer(object):
                 logger.info(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
 
 
-    def send_message_single(self, message):
-        
-        if isinstance(message, dict): 
-            message = json.dumps(message) 
-        elif not isinstance(message, str):
-            raise ValueError("message_list element not meet the requirement")
-        self.kafka_producer.produce(config.KAFKA_TOPIC, message, callback=self.delivery_callback)
-        self.kafka_producer.poll(config.KAFKA_POLL_TIMEOUT)
-        self.kafka_producer.flush()
-
-
-    def send_message_values(self, message_list):
+    def send_message_value(self, message_list):
         
         for message in message_list:
 
@@ -54,9 +40,9 @@ class KafkaProducer(object):
             self.kafka_producer.poll(config.KAFKA_POLL_TIMEOUT)
 
         self.kafka_producer.flush()
+        
 
-
-    def send_message_kvalues(self, message_dict):
+    def send_message_kv(self, message_dict):
         
         for message_key, message_value in message_dict.items():
             if not isinstance(message_key, str):
@@ -94,17 +80,32 @@ class KafkaProducer(object):
 
 class KafkaConsumer(object):
 
-    def __init__(self, topics, on_assign=None, on_revoke=None, on_lost=None, auto_consume=False) -> None:
+    def __init__(self, topics, on_assign=None, on_revoke=None, on_lost=None, callback=None) -> None:
         
         self.kafka_consumer = Consumer(**config.KAFKA_CONSUMER_CONF)# , logger=logger)
-        self.kafka_consumer.subscribe(topics, on_assign=on_assign, on_revoke=on_revoke, on_lost=on_lost)
+        
+        subscribe_info = self.get_subscribe_info(on_assign=on_assign, on_revoke=on_revoke, on_lost=on_lost) 
+        self.kafka_consumer.subscribe(topics, **subscribe_info)
         self.run_status = True
-        if auto_consume:
+        self.callback = callback
+        if callback:
             self._consume_message()
+
+    def get_subscribe_info(self, on_assign=None, on_revoke=None, on_lost=None):
+        temp_dict = {}
+        if on_assign:
+            temp_dict.update({"on_assign": on_assign})
+        if on_revoke:
+            temp_dict.update({"on_revoke": on_revoke})
+        if on_lost:
+            temp_dict.update({"on_lost": on_lost})
+
+        return temp_dict
 
 
     def set_subscribe(self, topics, on_assign=None, on_revoke=None, on_lost=None):
-        self.kafka_consumer.subscribe(topics, on_assign=on_assign, on_revoke=on_revoke, on_lost=on_lost)
+        subscribe_info = self.get_subscribe_info(on_assign=on_assign, on_revoke=on_revoke, on_lost=on_lost) 
+        self.kafka_consumer.subscribe(topics, **subscribe_info)
 
 
     def start_consume(self):
@@ -117,35 +118,40 @@ class KafkaConsumer(object):
 
 
     def _consume_message(self):
-        
-            while self.run_status:
+        if not self.callback:
+            print("callback error")
+            return
 
-                try:
-                    msg = self.kafka_consumer.poll(timeout=config.KAFKA_POLL_TIMEOUT)
+        while self.run_status:
 
-                    if msg is None:
-                        logger.info(f"msg is None")
-                        time.sleep(config.KAFKA_POLL_NONE_SLEEP)
-                        continue
+            try:
+                msg = self.kafka_consumer.poll(timeout=config.KAFKA_POLL_TIMEOUT)
 
-                    if msg.error():
-                        raise KafkaException(msg.error())
-                    
-                    logger.debug(f"message info: {{ \
-                                        topic:{msg.topic()}, \
-                                        partition:{msg.partition()}, \
-                                        offset:{msg.offset()}, \
-                                        key:{str(msg.key())}, \
-                                        value:{str(msg.value())} \
-                                    }}  ")
-                    
-                    self.kafka_consumer.store_offsets(msg)
+                if msg is None:
+                    logger.info(f"msg is None")
+                    time.sleep(config.KAFKA_POLL_NONE_SLEEP)
+                    continue
 
-                except Exception as e:
-                    logger.exception(e)
-        
-            if self.kafka_consumer:
-                self.kafka_consumer.close()
+                if msg.error():
+                    raise KafkaException(msg.error())
+                
+                logger.debug(f"message info: {{ \
+                                    topic:{msg.topic()}, \
+                                    partition:{msg.partition()}, \
+                                    offset:{msg.offset()}, \
+                                    key:{str(msg.key())}, \
+                                    value:{str(msg.value())} \
+                                }}  ")
+
+                self.callback(msg)
+                
+                self.kafka_consumer.store_offsets(msg)
+
+            except Exception as e:
+                logger.exception(e)
+    
+        if self.kafka_consumer:
+            self.kafka_consumer.close()
 
 
     def _demo(self):
