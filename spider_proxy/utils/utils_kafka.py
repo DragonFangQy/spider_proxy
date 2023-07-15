@@ -8,14 +8,14 @@ import time
 from confluent_kafka import Producer, Consumer, KafkaException
 
 from spider_proxy.spider_common import config
-# from spider_proxy.utils.utils_log import logger
+# from telnet_proxy.utils.utils_log import logger
 
 
 class KafkaProducer(object):
 
     def __init__(self) -> None:
         self.kafka_producer = Producer(**config.KAFKA_PRODUCER_CONF)# , logger=logging.Logger)
-    
+
 
     def delivery_callback(self, err, msg):
 
@@ -135,34 +135,41 @@ class KafkaConsumer(object):
         if not self.callback:
             print("callback error")
             return
-
+        counter = 0
         while self.run_status:
 
             try:
                 msg = self.kafka_consumer.poll(timeout=config.KAFKA_POLL_TIMEOUT)
 
                 if msg is None:
-                    logger.info(f"msg is None")
+                    # logger.info(f"msg is None")
+                    print(f"msg is None")
                     time.sleep(config.KAFKA_POLL_NONE_SLEEP)
                     continue
 
                 if msg.error():
                     raise KafkaException(msg.error())
                 
-                logger.debug(f"message info: {{ \
-                                    topic:{msg.topic()}, \
-                                    partition:{msg.partition()}, \
-                                    offset:{msg.offset()}, \
-                                    key:{str(msg.key())}, \
-                                    value:{str(msg.value())} \
-                                }}  ")
+                # logger.debug(f"message info: {{ \
+                #                     topic:{msg.topic()}, \
+                #                     partition:{msg.partition()}, \
+                #                     offset:{msg.offset()}, \
+                #                     key:{str(msg.key())}, \
+                #                     value:{str(msg.value())} \
+                #                 }}  ")              
 
                 self.callback(msg)
                 
                 self.kafka_consumer.store_offsets(msg)
+                counter+=1
+                if counter >= config.KAFKA_COMMIT_PER:
+                    self.kafka_consumer.commit()
+                    counter = 0
 
             except Exception as e:
-                logger.exception(e)
+                import traceback
+                traceback.print_exc()
+                # logger.exception(e)
     
         if self.kafka_consumer:
             self.kafka_consumer.close()
