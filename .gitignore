@@ -117,20 +117,12 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+.vscode/*
 
-.vscode
-
-
-servers/calculate-asu-monitor/config/zrcc.json
-servers/calculate-asu-monitor/config/Settings.xml
-
-
-.devcontainer /devcontainer.json
-
-static_folder/*
-
+.DS_Store
 # history 插件
 .history
 .lh
 .idea
-log
+log/*
+
