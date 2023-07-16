@@ -27,4 +27,4 @@ COPY entrance.py /${PROJECT_DIRNAME}/entrance.py
 
 
 # CMD ./docker/run_app.sh
-CMD ["/usr/bin","tail -f /dev/null"]
+CMD ["/bin/bash","tail -f /dev/null"]
