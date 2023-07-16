@@ -40,7 +40,7 @@ build:
     - bash build_image.sh $DOCKER_TAG_SUFFIX
 
 build_debug_stage:
-  stage: build_dev
+  stage: build_debug_stage
   rules:
     - if: '$CI_COMMIT_BRANCH == "dev"'
     - if: '$CI_COMMIT_BRANCH == "main"'
