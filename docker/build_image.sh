@@ -6,7 +6,7 @@ source ./util_function.sh
 cd ..
 tag=${tag_suffix}
 #tag="release_20220311"
-image="workdragonfang/spider_proxy":${tag}
+image=${tag}
 
 
 # 通过 tr 切分 并获取列表最后一个元素
