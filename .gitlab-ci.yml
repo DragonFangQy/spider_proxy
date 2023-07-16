@@ -36,9 +36,11 @@ build:
     - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d_%H%M%S' $CI_COMMIT_SHA)
     - echo 'date:' $DATE
     - export DOCKER_TAG_SUFFIX="ci"_$DATE"_"${CI_COMMIT_SHA:0:8}
-    - echo 'build start:' $DOCKER_TAG_SUFFIX 
-    - bash build_image.sh $DOCKER_TAG_SUFFIX
-
+    - echo 'build start:' $DOCKER_TAG_SUFFIX  
+    - export DockerImageName="workdragonfang/"$PROJECT_REPO_NAME":"$DOCKER_TAG_SUFFIX
+    - bash build_image.sh $DockerImageName
+    - echo 'build end image name :' $DockerImageName
+    
 build_debug_stage:
   stage: build_debug_stage
   rules:
