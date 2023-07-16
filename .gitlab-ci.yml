@@ -2,7 +2,7 @@ stages:
   # - test
   # - sonar
   - build
-  # - build_dev
+  - build_debug_stage
 
 variables:
   GIT_STRATEGY: clone
@@ -39,14 +39,22 @@ build:
     - echo 'build start:' $DOCKER_TAG_SUFFIX 
     - bash build_image.sh $DOCKER_TAG_SUFFIX
 
-# build_dev_stage:
-#   stage: build_dev
-#   script:
-#     - cd docker
-#     - echo 'build start:' $DEV_DOCKER_TAG_SUFFIX 
-#     - sh build_dev_image.sh $DEV_DOCKER_TAG_SUFFIX
-#     - echo 'build end:' $DEV_DOCKER_TAG_SUFFIX 
-  # when: manual
+build_debug_stage:
+  stage: build_dev
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  tags: 
+    - docker
+  script:
+    - export ROOT_PATH=$(pwd)
+    - echo 'root path:' $ROOT_PATH
+    - cd docker
+    - export DATE=$(git log -1 --pretty=format:"%ad" --date=format:'%Y%m%d_%H%M%S' $CI_COMMIT_SHA)
+    - echo 'date:' $DATE
+    - export DOCKER_TAG_SUFFIX="ci"_$DATE"_"${CI_COMMIT_SHA:0:8}"_debug"
+    - bash build_image.sh $DOCKER_TAG_SUFFIX
+  when: manual
 
 
 # git clone 项目
