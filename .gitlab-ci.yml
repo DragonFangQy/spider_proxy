@@ -2,7 +2,7 @@ stages:
   # - test
   # - sonar
   - build
-  # - build_dev
+  - build_debug_stage
 
 variables:
   GIT_STRATEGY: clone
