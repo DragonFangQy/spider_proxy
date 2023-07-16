@@ -6,7 +6,7 @@ if __name__ == '__main__':
 
     counter = 0
 
-    time.sleep(60)
+    time.sleep(15)
     while True:
         try:
 
