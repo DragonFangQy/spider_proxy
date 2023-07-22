@@ -23,8 +23,10 @@ class Cn89ipSpider(BaseSpider):
     
     def start_requests(self):
         for page in self.page_total:
-            print("page_total：%s,当前 page：%s" % (len(self.page_total), page))
-            yield Request(url=self.url_format.format(page=page))
+            # print("page_total：%s,当前 page：%s" % (len(self.page_total), page))
+            url=self.url_format.format(page=page)
+            self.logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\nurl: {url}\n")
+            yield Request(url=url)
 
     def parse(self, response):        
         yield from self.parse_data(response=response)

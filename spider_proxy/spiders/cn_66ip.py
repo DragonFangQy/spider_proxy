@@ -6,7 +6,6 @@ from itemloaders.processors import TakeFirst
 from spider_proxy.spider_items.cn_66ip_item import Cn66IPItem, Cn66IPItemEnum
 from spider_proxy.spiders.base_spider import BaseSpider
 
-
 class Cn66ipSpider(BaseSpider):
     name = 'cn_66ip'
     allowed_domains = ['66ip.cn']
@@ -19,8 +18,10 @@ class Cn66ipSpider(BaseSpider):
 
     def start_requests(self):
         for page in self.page_total:
-            print("page_total：%s,当前 page：%s" % (len(self.page_total), page))
-            yield Request(url=self.url_format.format(page=page + 1))
+            # print("page_total：%s,当前 page：%s" % (len(self.page_total), page))
+            url=self.url_format.format(page=page + 1)
+            self.logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\nurl: {url}\n")
+            yield Request(url=url)
 
     def parse(self, response):
         yield from self.parse_data(response=response)

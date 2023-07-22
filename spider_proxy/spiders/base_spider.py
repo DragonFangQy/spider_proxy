@@ -4,6 +4,7 @@ from abc import ABCMeta, abstractmethod
 import scrapy
 
 from spider_proxy.spider_common import config
+from spider_proxy.utils.utils_log import my_logger
 
 
 class BaseSpider(scrapy.Spider, metaclass=ABCMeta):
@@ -23,6 +24,7 @@ class BaseSpider(scrapy.Spider, metaclass=ABCMeta):
         super().__init__(name, **kwargs)
         self.url_format = self.get_url_format()
         self.re_compile = self.get_re_compile()
+        self.logger = my_logger
         
     @abstractmethod
     def get_url_format(self):
