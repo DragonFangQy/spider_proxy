@@ -174,7 +174,8 @@ class Logger(logging.Logger):
             # inspect
             frame = inspect.currentframe()
             co_filename, f_lineno, f_name = frame.f_back.f_back.f_code.co_filename, frame.f_back.f_back.f_lineno, frame.f_back.f_back.f_code.co_name
-            _message = f"[{co_filename}:{f_lineno}:{f_name}] - {message+'\n'}"
+            message = message+'\n'
+            _message = f"[{co_filename}:{f_lineno}:{f_name}] - {message}"
 
             log_func = level_dict.get(level) 
             log_func(_message) 
