@@ -8,11 +8,11 @@ import colorlog
 from logging.handlers import TimedRotatingFileHandler
 
 
-
 base_file_path = os.path.dirname( os.path.dirname(__file__) )
 # LOG_PATH 
 LOG_PATH = os.getenv("LOG_PATH", base_file_path+"/logs/")
 print(LOG_PATH)
+
 # level info 20 debug 10
 log_level = os.getenv("LOG_LEVEL", logging.INFO)
 ### 日志 ###
@@ -26,7 +26,7 @@ log_colors_config = {
 }
 
 LOG_FORMATTER = colorlog.ColoredFormatter(
-            '%(log_color)s%(levelname)1.1s %(asctime)s %(reset)s %(format)s| '
+            '%(log_color)s%(levelname)1.1s %(asctime)s %(reset)s | '
             '%(message_log_color)s%(levelname)-8s %(reset)s| '
             '%(white)s%(message)s',
             reset=True,
@@ -43,11 +43,17 @@ LOG_FORMATTER = colorlog.ColoredFormatter(
             style='%'
         ) 
 
+def make_log_folder(log_file_path):
+    save_dir = "/".join(log_file_path.split("/")[:-1])
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+    return log_file_path
+
 # 控制日志输出路径，
 # 必须包含 logging.INFO
 LOG_INFO = {
     logging.DEBUG: {
-            "log_file_path": LOG_PATH+"/debug/service.log",
+            "log_file_path": make_log_folder(LOG_PATH+"/debug/service.log"),
             "log_handler": TimedRotatingFileHandler(
                                 filename=LOG_PATH+"/debug/service.log", 
                                 when="MIDNIGHT", 
@@ -57,7 +63,7 @@ LOG_INFO = {
             "log_formatter": LOG_FORMATTER,
         },
     logging.INFO: {
-            "log_file_path": LOG_PATH+"/info/service.log",
+            "log_file_path": make_log_folder(LOG_PATH+"/info/service.log"),
             "log_handler": TimedRotatingFileHandler(
                                 filename=LOG_PATH+"/info/service.log", 
                                 when="MIDNIGHT", 
@@ -67,7 +73,7 @@ LOG_INFO = {
             "log_formatter": LOG_FORMATTER,
         },
     logging.ERROR: {
-            "log_file_path": LOG_PATH+"/error/service.log",
+            "log_file_path": make_log_folder(LOG_PATH+"/error/service.log"),
             "log_handler": TimedRotatingFileHandler(
                                 filename=LOG_PATH+"/error/service.log", 
                                 when="MIDNIGHT", 
@@ -79,9 +85,10 @@ LOG_INFO = {
 }
 
 class Logger(logging.Logger):
-    def __init__(self, name, level='DEBUG', encoding='utf-8'):
+    def __init__(self, name, level='DEBUG', encoding='utf-8', print_console=True):
         super().__init__(name)
         
+        self.print_console = print_console
         self.encoding = encoding
         self.level = level
         self.__logger = logging.getLogger()
@@ -118,6 +125,13 @@ class Logger(logging.Logger):
             log_handler.setFormatter(log_formatter) 
             log_handler.setLevel(level=log_level)
             self.__logger.addHandler(log_handler)
+        
+        if self.print_console:
+            log_formatter = LOG_INFO.get(logging.INFO).get("log_formatter")
+            console_handler = colorlog.StreamHandler()
+            console_handler.setFormatter(log_formatter) 
+            console_handler.setLevel(level=logging.INFO)
+            self.__logger.addHandler(console_handler)
 
     @staticmethod
     def _close_handler():
@@ -160,7 +174,7 @@ class Logger(logging.Logger):
             # inspect
             frame = inspect.currentframe()
             co_filename, f_lineno, f_name = frame.f_back.f_back.f_code.co_filename, frame.f_back.f_back.f_lineno, frame.f_back.f_back.f_code.co_name
-            _message = f"[{co_filename}:{f_lineno}:{f_name}] - {message}"
+            _message = f"[{co_filename}:{f_lineno}:{f_name}] - {message+'\n'}"
 
             log_func = level_dict.get(level) 
             log_func(_message) 
@@ -170,4 +184,4 @@ class Logger(logging.Logger):
 
 log_name = "log_name.log"
 
-# logger = Logger(name=log_name, log_path=LOG_PATH, level=int(log_level))
+my_logger = Logger(name=log_name, level=int(log_level))

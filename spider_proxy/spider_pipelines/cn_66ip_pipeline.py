@@ -5,7 +5,7 @@ from itemadapter import ItemAdapter
 from spider_proxy.spider_model.spider_proxy_model import SpiderProxyModel
 from spider_proxy.spider_pipelines.base_pipeline import BasePipeline
 # from spider_proxy.utils.utils_mq import get_mq_producer
-from spider_proxy.utils.utils_kafka import kafka_producer, KafkaProducer
+from spider_proxy.utils.utils_kafka import kafka_producer
 
 class CN66IPPipeline(BasePipeline):
 
