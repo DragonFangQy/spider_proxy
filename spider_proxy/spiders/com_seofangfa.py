@@ -31,7 +31,7 @@ class ComSeofangfaipSpider(BaseSpider):
         for page in self.page_total:
             
             url=self.url_format.format(count_num=page)
-            self.logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\nurl: {url}\n")
+            self.my_logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\nurl: {url}\n")
             yield Request(url=url)
             self.page_total.append(len(self.page_total))
 

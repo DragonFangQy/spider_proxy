@@ -20,7 +20,7 @@ class Cn66ipSpider(BaseSpider):
         for page in self.page_total:
             # print("page_total：%s,当前 page：%s" % (len(self.page_total), page))
             url=self.url_format.format(page=page + 1)
-            self.logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\nurl: {url}\n")
+            self.my_logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\nurl: {url}\n")
             yield Request(url=url)
 
     def parse(self, response):
