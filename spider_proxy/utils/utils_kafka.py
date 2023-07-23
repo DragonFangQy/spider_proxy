@@ -14,7 +14,7 @@ from spider_proxy.utils.utils_log import my_logger
 class KafkaProducer(object):
 
     def __init__(self) -> None:
-        self.kafka_producer = Producer(**config.KAFKA_PRODUCER_CONF)# , logger=logging.Logger)
+        self.kafka_producer = Producer(**config.KAFKA_PRODUCER_CONF, logger=my_logger)
 
 
     def delivery_callback(self, err, msg):
@@ -96,7 +96,7 @@ class KafkaConsumer(object):
 
     def __init__(self, topics, on_assign=None, on_revoke=None, on_lost=None, callback=None) -> None:
         
-        self.kafka_consumer = Consumer(**config.KAFKA_CONSUMER_CONF)# , logger=logger)
+        self.kafka_consumer = Consumer(**config.KAFKA_CONSUMER_CONF, logger=my_logger)
         
         subscribe_info = self.get_subscribe_info(on_assign=on_assign, on_revoke=on_revoke, on_lost=on_lost) 
         self.kafka_consumer.subscribe(topics, **subscribe_info)
@@ -142,21 +142,20 @@ class KafkaConsumer(object):
                 msg = self.kafka_consumer.poll(timeout=config.KAFKA_POLL_TIMEOUT)
 
                 if msg is None:
-                    # logger.info(f"msg is None")
-                    print(f"msg is None")
+                    my_logger.info(f"msg is None")
                     time.sleep(config.KAFKA_POLL_NONE_SLEEP)
                     continue
 
                 if msg.error():
                     raise KafkaException(msg.error())
                 
-                # logger.debug(f"message info: {{ \
-                #                     topic:{msg.topic()}, \
-                #                     partition:{msg.partition()}, \
-                #                     offset:{msg.offset()}, \
-                #                     key:{str(msg.key())}, \
-                #                     value:{str(msg.value())} \
-                #                 }}  ")              
+                my_logger.debug(f"message info: {{ \
+                                    topic:{msg.topic()}, \
+                                    partition:{msg.partition()}, \
+                                    offset:{msg.offset()}, \
+                                    key:{str(msg.key())}, \
+                                    value:{str(msg.value())} \
+                                }}  ")              
 
                 self.callback(msg)
                 
