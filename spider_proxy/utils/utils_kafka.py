@@ -25,7 +25,7 @@ class KafkaProducer(object):
         else:
             # print(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
             my_logger.debug(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
-            div, mod = divmod(msg.partition(), config.KAFKA_LOGS_ONCE)
+            div, mod = divmod(msg.offset(), config.KAFKA_LOGS_ONCE)
             if mod == 0:
                 # print(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
                 my_logger.info(f"Message delivered to topic:'{msg.topic()}' partition:'{msg.partition()}' offset:'{msg.offset()}'")
