@@ -25,6 +25,7 @@ class BaseSpider(scrapy.Spider, metaclass=ABCMeta):
         self.url_format = self.get_url_format()
         self.re_compile = self.get_re_compile()
         self.my_logger = my_logger
+        self.my_logger._Logger__logger.name = self.__class__.__name__
         
     @abstractmethod
     def get_url_format(self):
