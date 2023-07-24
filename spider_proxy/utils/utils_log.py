@@ -2,6 +2,7 @@
 import os
 import logging
 import inspect
+import re
 
 import colorlog
 
@@ -18,7 +19,7 @@ print(LOG_PATH)
 # level info 20 debug 10
 log_level = os.getenv("LOG_LEVEL", logging.INFO)
 # 默认debug 只log debug
-log_debug_log_all = os.getenv("LOG_DEBUG_LOG_ALL", "False")
+log_info_not_look_debug = os.getenv("LOG_INFO_NOT_LOOK_DEBUG", "False")
 ### 日志 ###
 # 定义不同日志等级颜色
 log_colors_config = {
@@ -26,22 +27,33 @@ log_colors_config = {
    'INFO': 'bold_green',
    'WARNING': 'bold_yellow',
    'ERROR': 'bold_red',
-   'CRITICAL': 'red',
+   'CRITICAL': 'bold_purple',
 }
 
+color_fmt_list = [
+    '%(log_color)s %(levelname)1.1s %(asctime)s %(reset)s',
+    '%(bold_white)s %(name)-8s %(reset)s',
+    '%(message_level_log_color)s    %(levelname)-8s %(reset)s',
+    '%(message_log_color)s %(message)s %(reset)s',
+]
 LOG_FORMATTER = colorlog.ColoredFormatter(
-            '%(log_color)s%(levelname)1.1s %(asctime)s %(reset)s | '
-            '%(message_log_color)s%(levelname)-8s %(reset)s| '
-            '%(white)s%(message)s',
+            " | ".join(color_fmt_list),
             reset=True,
             log_colors=log_colors_config,
             secondary_log_colors={
+                    'message_level': {
+                        'DEBUG': 'bg_bold_cyan',
+                        'INFO': 'bg_bold_green',
+                        'WARNING': 'bg_bold_yellow',
+                        'ERROR': 'bg_bold_red',
+                        'CRITICAL': 'bg_bold_purple'
+                    },
                     'message': {
                         'DEBUG': 'cyan',
                         'INFO': 'green',
                         'WARNING': 'yellow',
                         'ERROR': 'red',
-                        'CRITICAL': 'bold_red'
+                        'CRITICAL': 'purple'
                     }
             },
             style='%'
@@ -109,61 +121,76 @@ class Logger(logging.Logger):
             if not os.path.exists(save_dir):
                 os.makedirs(save_dir)
     
+    def __add_log_handler(self, level, handler_list):
+
+        # 首先添加 info
+        log_info = LOG_INFO.get(level)
+        log_file_path = log_info.get("log_file_path")
+        log_handler = TimedRotatingFileHandler(
+                            filename=log_file_path, 
+                            when="MIDNIGHT", 
+                            interval=1,
+                            backupCount=30
+                            )
+        
+        log_formatter = log_info.get("log_formatter")
+
+        if not isinstance(log_handler, logging.Handler):
+            raise ValueError(f"{log_handler} not isinstance logging.Handler ")
+
+        log_handler.setFormatter(log_formatter) 
+        log_handler.setLevel(level)
+        handler_list.append(log_handler)
+        self.__logger.addHandler(log_handler)
+
     def _set_log_handler(self, level):
         
         handler_list = []
+
+        # 首先添加 info
+        self.__add_log_handler(logging.INFO, handler_list)
+
         for log_level, log_info in LOG_INFO.items():
 
+            # 特殊处理，将 EXCEPTION 的等级调整为 ERROR
+            # 以便添加 Handler
             if level == self.EXCEPTION:
                 level = logging.ERROR
 
-            if level != log_level:
+            # 特殊处理，只添加对应 level 的Handler
+            # 以便每个 level 都可以有自己的 file
+            # 但同时跳过 logging.INFO，
+            # 因为每个等级必须包含 这个 Handler
+            # 以便于在 info 中看到所有的 log
+            if level != log_level or level == logging.INFO:
                 continue
-
-            log_file_path = log_info.get("log_file_path")
-            log_handler = TimedRotatingFileHandler(
-                                filename=log_file_path, 
-                                when="MIDNIGHT", 
-                                interval=1,
-                                backupCount=30
-                                )
             
-            log_formatter = log_info.get("log_formatter")
+            # log_file_path = log_info.get("log_file_path")
+            # log_handler = TimedRotatingFileHandler(
+            #                     filename=log_file_path, 
+            #                     when="MIDNIGHT", 
+            #                     interval=1,
+            #                     backupCount=30
+            #                     )
+            
+            # log_formatter = log_info.get("log_formatter")
 
-            if not isinstance(log_handler, logging.Handler):
-                raise ValueError(f"{log_handler} not isinstance logging.Handler ")
+            # if not isinstance(log_handler, logging.Handler):
+            #     raise ValueError(f"{log_handler} not isinstance logging.Handler ")
 
-            log_handler.setFormatter(log_formatter) 
-            log_handler.setLevel(level=log_level)
-            handler_list.append(log_handler)
-            self.__logger.addHandler(log_handler)
+            # log_handler.setFormatter(log_formatter) 
+            # log_handler.setLevel(level=log_level)
+            # handler_list.append(log_handler)
+            # self.__logger.addHandler(log_handler)
         
-            # or (level != logging.DEBUG, logging.INFO) \
-            # or level > logging.INFO:
+            # 添加对应 level 的 handler
+            self.__add_log_handler(logging.INFO, handler_list)
 
-        if len(handler_list) == 0 or level > logging.INFO or log_debug_log_all.lower() == "True".lower():
-            # 必须存在 info
-            log_info = LOG_INFO.get(logging.INFO)
-            log_file_path = log_info.get("log_file_path")
-            log_handler = TimedRotatingFileHandler(
-                                filename=log_file_path, 
-                                when="MIDNIGHT", 
-                                interval=1,
-                                backupCount=30
-                                )
-            
-            log_formatter = log_info.get("log_formatter")
+        # 默认info 中看不见 debug
+        if level == logging.DEBUG and log_info_not_look_debug.lower() != "True".lower() :
+            handler_list = handler_list[1:]
 
-            if not isinstance(log_handler, logging.Handler):
-                raise ValueError(f"{log_handler} not isinstance logging.Handler ")
-
-            log_handler.setFormatter(log_formatter) 
-            log_handler.setLevel(level=logging.INFO)
-            handler_list.append(log_handler)
-            self.__logger.addHandler(log_handler)
-        elif level == logging.DEBUG:
-            pass
-
+        # 最后添加 控制台输出
         if self.print_console:
             console_handler = colorlog.StreamHandler()
 
@@ -225,6 +252,9 @@ class Logger(logging.Logger):
             # inspect
             frame = inspect.currentframe()
             co_filename, f_lineno, f_name = frame.f_back.f_back.f_code.co_filename, frame.f_back.f_back.f_lineno, frame.f_back.f_back.f_code.co_name
+            co_filename = re.sub(r"\\", "/", co_filename)
+            co_filename = co_filename.split("/")[-1]
+
             message = message+'\n'
             _message = f"[{co_filename}:{f_lineno}:{f_name}] - {message}"
 
