@@ -13,6 +13,7 @@ from logging.handlers import TimedRotatingFileHandler
 base_file_path = os.path.dirname( os.path.dirname(__file__) )
 # LOG_PATH 
 LOG_PATH = os.getenv("LOG_PATH", base_file_path+"/logs/")
+LOG_ONLY_CONSOLE = os.getenv("LOG_ONLY_CONSOLE", "False")
 print(LOG_PATH)
 
 # level info 20 debug 10
@@ -129,30 +130,31 @@ class Logger(logging.Logger):
         
         handler_list = []
 
-        # 首先添加 info
-        self.__add_log_handler(logging.INFO, handler_list)
-
-        for log_level, log_info in LOG_INFO.items():
-
-            # 特殊处理，将 EXCEPTION 的等级调整为 ERROR
-            # 以便添加 Handler
-            if level == self.EXCEPTION:
-                level = logging.ERROR
-
-            # 特殊处理，只添加对应 level 的Handler
-            # 以便每个 level 都可以有自己的 file
-            # 但同时跳过 logging.INFO，
-            # 因为每个等级必须包含 这个 Handler
-            # 以便于在 info 中看到所有的 log
-            if level != log_level or level == logging.INFO:
-                continue
-
-            # 添加对应 level 的 handler
+        if LOG_ONLY_CONSOLE.lower() == "False".lower():
+            # 首先添加 info
             self.__add_log_handler(logging.INFO, handler_list)
 
-        # 默认info 中看不见 debug
-        if level == logging.DEBUG and log_info_not_look_debug.lower() != "True".lower() :
-            handler_list = handler_list[1:]
+            for log_level, log_info in LOG_INFO.items():
+
+                # 特殊处理，将 EXCEPTION 的等级调整为 ERROR
+                # 以便添加 Handler
+                if level == self.EXCEPTION:
+                    level = logging.ERROR
+
+                # 特殊处理，只添加对应 level 的Handler
+                # 以便每个 level 都可以有自己的 file
+                # 但同时跳过 logging.INFO，
+                # 因为每个等级必须包含 这个 Handler
+                # 以便于在 info 中看到所有的 log
+                if level != log_level or level == logging.INFO:
+                    continue
+
+                # 添加对应 level 的 handler
+                self.__add_log_handler(logging.INFO, handler_list)
+
+            # 默认info 中看不见 debug
+            if level == logging.DEBUG and log_info_not_look_debug.lower() != "True".lower() :
+                handler_list = handler_list[1:]
 
         # 最后添加 控制台输出
         if self.print_console:
@@ -168,7 +170,7 @@ class Logger(logging.Logger):
         return handler_list
 
     def _close_handler(self, handler_list):
-        
+
         for log_handler in handler_list:
             self.__logger.removeHandler(log_handler)
             if not isinstance(log_handler, logging.Handler):
@@ -225,4 +227,4 @@ class Logger(logging.Logger):
 
 log_name = "log_name.log"
 
-my_logger = Logger(name=log_name, level=int(10))
+my_logger = Logger(name=log_name, level=int(log_level))
