@@ -6,9 +6,8 @@ import re
 
 import colorlog
 
-
 from logging.handlers import TimedRotatingFileHandler
-# from spider_proxy.utils.demo import TimedRotatingFileHandlerSafe as TimedRotatingFileHandler
+
 
 
 base_file_path = os.path.dirname( os.path.dirname(__file__) )
@@ -64,32 +63,14 @@ LOG_FORMATTER = colorlog.ColoredFormatter(
 LOG_INFO = {
     logging.DEBUG: {
             "log_file_path": LOG_PATH+"/debug/service.log",
-            # "log_handler": TimedRotatingFileHandler(
-            #                     filename=LOG_PATH+"/debug/service.log", 
-            #                     when="MIDNIGHT", 
-            #                     interval=1,
-            #                     backupCount=30
-            #                     ),
             "log_formatter": LOG_FORMATTER,
         },
     logging.INFO: {
             "log_file_path": LOG_PATH+"/info/service.log",
-            # "log_handler": TimedRotatingFileHandler(
-            #                     filename=LOG_PATH+"/info/service.log", 
-            #                     when="MIDNIGHT", 
-            #                     interval=1,
-            #                     backupCount=30
-            #                     ),
             "log_formatter": LOG_FORMATTER,
         },
     logging.ERROR: {
             "log_file_path": LOG_PATH+"/error/service.log",
-            # "log_handler": TimedRotatingFileHandler(
-            #                     filename=LOG_PATH+"/error/service.log", 
-            #                     when="MIDNIGHT", 
-            #                     interval=1,
-            #                     backupCount=30
-            #                     ),
             "log_formatter": LOG_FORMATTER,
         },
 }
@@ -103,6 +84,7 @@ class Logger(logging.Logger):
         self.level = level
         self.__logger = logging.getLogger(name)
         self.__logger.setLevel(self.level)
+        self.__logger.propagate = False
 
         self.EXCEPTION = 45
         
@@ -164,25 +146,7 @@ class Logger(logging.Logger):
             # 以便于在 info 中看到所有的 log
             if level != log_level or level == logging.INFO:
                 continue
-            
-            # log_file_path = log_info.get("log_file_path")
-            # log_handler = TimedRotatingFileHandler(
-            #                     filename=log_file_path, 
-            #                     when="MIDNIGHT", 
-            #                     interval=1,
-            #                     backupCount=30
-            #                     )
-            
-            # log_formatter = log_info.get("log_formatter")
 
-            # if not isinstance(log_handler, logging.Handler):
-            #     raise ValueError(f"{log_handler} not isinstance logging.Handler ")
-
-            # log_handler.setFormatter(log_formatter) 
-            # log_handler.setLevel(level=log_level)
-            # handler_list.append(log_handler)
-            # self.__logger.addHandler(log_handler)
-        
             # 添加对应 level 的 handler
             self.__add_log_handler(logging.INFO, handler_list)
 
@@ -204,12 +168,7 @@ class Logger(logging.Logger):
         return handler_list
 
     def _close_handler(self, handler_list):
-
-        # for log_info in LOG_INFO.values():
-            # log_handler = log_info.get("log_handler") 
-
-            # if not isinstance(log_handler, logging.Handler):
-            #     raise ValueError(f"{log_handler} not isinstance logging.Handler ")
+        
         for log_handler in handler_list:
             self.__logger.removeHandler(log_handler)
             if not isinstance(log_handler, logging.Handler):
