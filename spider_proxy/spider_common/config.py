@@ -53,6 +53,10 @@ AUTOTHROTTLE_START_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_START_DELAY", "
 AUTOTHROTTLE_MAX_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_MAX_DELAY", "10"))
 INIT_PAGE_SIZE = int(os.environ.get("CONF_INIT_PAGE_SIZE", "5"))
 CONCURRENT_REQUESTS_PER_DOMAIN = int(os.environ.get("CONF_CONCURRENT_REQUESTS_PER_DOMAIN", "10"))
+# 代理个数
+PROXY_NUM = int(os.environ.get("CONF_PROXY_NUM", "100"))
+# 使用刷新次数
+REFRESH_PROXY_NUM = int(os.environ.get("CONF_PROXY_NUM", "100"))
 
 
 """

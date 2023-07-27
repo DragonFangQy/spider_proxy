@@ -1,9 +1,10 @@
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from spider_proxy.spider_common.config import SQLALCHEMY_DATABASE_URI
+from spider_proxy.spider_common import config # SQLALCHEMY_DATABASE_URI
 
-engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=False)
+engine = create_engine(config.SQLALCHEMY_DATABASE_URI, echo=False)
 
 def open_session():
     # 创建session
@@ -39,3 +40,7 @@ def close_session(db_session):
 
     if db_session:
         db_session.close()
+
+
+db_session = open_session()
+
