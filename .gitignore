@@ -126,3 +126,4 @@ dmypy.json
 .idea
 log/*
 
+local_deploy/*
