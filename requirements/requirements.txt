@@ -54,3 +54,4 @@ alembic==1.11.1
 confluent-kafka==2.1.1
 jsonschema
 colorlog
+pandas==2.0.3

@@ -8,7 +8,8 @@ if __name__ == '__main__':
 
     crawler = CrawlerProcess(settings)
 
-    crawler.crawl('com_seofangfa') 
+    crawler.crawl('com_zdaye') 
+
     crawler.start()
         
  

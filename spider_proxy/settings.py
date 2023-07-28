@@ -57,6 +57,7 @@ DEFAULT_REQUEST_HEADERS = {
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
    # 'spider_proxy.middlewares.SpiderProxyDownloaderMiddleware': 543,
+	'spider_proxy.spider_middlewares.cn_66ip_middleware.Cn66IPDownloaderMiddleware': 500,
 	# 'spider_proxy.spider_middlewares.com_zdaye_middleware.ComZdayeDownloaderMiddleware': 500,
 }
 
