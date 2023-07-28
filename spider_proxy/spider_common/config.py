@@ -62,7 +62,7 @@ REFRESH_PROXY_NUM = int(os.environ.get("CONF_PROXY_NUM", "100"))
 """
     Kafka Config
 """
-KAFKA_BROKER = os.environ.get("CONF_KAFKA_BROKER", "127.0.0.1:9095")
+KAFKA_BROKER = os.environ.get("CONF_KAFKA_BROKER", "8.218.227.109:9095")
 KAFKA_TOPIC = os.environ.get("CONF_KAFKA_TOPIC", "spider_topic")
 KAFKA_GROUP = os.environ.get("CONF_KAFKA_CONSUMER_GROUP", "test_topic_consumer_group_0001")
 KAFKA_POLL_TIMEOUT = int(os.environ.get("CONF_KAFKA_POLL_TIMEOUT", "5"))
