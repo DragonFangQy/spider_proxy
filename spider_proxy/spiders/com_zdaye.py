@@ -8,13 +8,17 @@ from scrapy.http import HtmlResponse
 from scrapy.loader import ItemLoader
 from itemloaders.processors import TakeFirst
 from spider_proxy.spider_items.cn_66ip_item import Cn66IPItem, Cn66IPItemEnum
+from spider_proxy.spiders.base_spider import BaseSpider
+from spider_proxy.spider_common import config
 
-# from spider_proxy.utils.utils_proxy import get_proxy_url
+
 
 """
 站大爷代理
 """
-class ComZdayeSpider(scrapy.Spider):
+class ComZdayeSpider(BaseSpider):
+    name = 'com_zdaye'
+    allowed_domains = ['zdaye.com']
     """
     parse
         add_detail_url_by_parent
@@ -26,26 +30,20 @@ class ComZdayeSpider(scrapy.Spider):
     parse_detail 解析详情页，并调用 add_detail_url_by_brother 添加其他详情页面
             
     """
+    diff_month = config.ZDAYE_DIFF_MONTH
 
-    name = 'com_zdaye'
-    allowed_domains = ['zdaye.com']
-    # start_urls = ['http://zdaye.com/']
-
-    page_total = [1, 2]
-    url_format = "https://www.zdaye.com/dayProxy/{year}/{month}/{page}.html"
-    # re_compile = re.compile("http://www.66ip.cn/(?P<page>\d+).html")
-    re_compile = re.compile("https://www.zdaye.com/dayProxy/(?P<year>\d+)/(?P<month>\d+)/(?P<page>\d+).html")
+    # https://www.zdaye.com/dayProxy/ip/335085/1.html
+    re_compile_proxy_detail = re.compile("https://www.zdaye.com/dayProxy/ip/(?P<id>\d+)/(?P<page>\d+).html")
     
 
-    init_page_total = False
+    def get_url_format(self):
+        return "https://www.zdaye.com/dayProxy/{year}/{month}/{page}.html"
 
-    diff_month = 1
 
-    proxy_url = None
-    
-    # empty_page_list = []
-    # empty_page_threshold = 5
-	
+    def get_re_compile(self):
+        return re.compile("https://www.zdaye.com/dayProxy/(?P<year>\d+)/(?P<month>\d+)/(?P<page>\d+).html")
+
+
     def start_requests(self):
 
         # 当前月份
@@ -59,34 +57,41 @@ class ComZdayeSpider(scrapy.Spider):
 
         for i in range(self.diff_month):
 
-            current_datetime_list = current_datetime.strftime("%Y-%m").split("-")
+            # 获取年份 和 月份
+            year, month = current_datetime.strftime("%Y-%m").split("-")
 
             for page in self.page_total:
-                print("月份 %s,page_total：%s,当前 page：%s" % (current_datetime.month, self.page_total, page))
-                yield Request(url=self.url_format.format(year=current_datetime_list[0], headers=headers_dict, month=current_datetime_list[1], page=page))
+                temp_str = year+"_"+month
+                self.my_logger.info(f"月份: {temp_str},当前 page：{page}, page_total：{self.page_total}")
+                yield Request(url=self.url_format.format(year=year, month=month, page=page), headers=headers_dict)
 
-            # 上个月
+            # 设置时间为本月的第一天
+            # 通过timedelta 获取上个月的 年份&月份
+            # 并赋值给 current_datetime
+            # 通过 for 的方式一直获取 上个月的 年份&月份
             pre_month_datetime = datetime.date(current_datetime.year, current_datetime.month, 1) + datetime.timedelta(days=-1)
             current_datetime = datetime.date(pre_month_datetime.year, pre_month_datetime.month, 1)
 
-    def parse(self, response: HtmlResponse, **kwargs):
-        print("func parse")
-        select_obj = Selector(response)
 
+    def parse(self, response: HtmlResponse, **kwargs):
+        # 解析列表页，添加详情页
+        select_obj = Selector(response)
+        
+        # 调整 self.page_total
         page_num = self._get_page_num(select_obj)
         self._set_page_total(page_num)
         
-
         yield from self.add_detail_url_by_parent(select_obj, response)
         
 
-    def parse_detail(self, response: HtmlResponse, **kwargs):
-
+    def parse_detail(self, response: HtmlResponse, **kwargs):        
+        # 处理详情页的分页器，添加详情页
         select_obj = Selector(response)
         
-        self.parse_data(select_obj, response)
+        yield from self.parse_data(select_obj, response)
 
         yield from self.add_detail_url_by_brother(response, select_obj)
+
 
     def add_detail_url_by_brother(self, response, select_obj):
         """
@@ -119,6 +124,7 @@ class ComZdayeSpider(scrapy.Spider):
                           , headers=response.request.headers)
                         #   , headers=response.request.headers, meta=response.request.meta.update({"proxy": self.proxy_url}))
 
+
     def add_detail_url_by_parent(self, select_obj, response):
         """
         添加明细url，通过父页面 
@@ -128,7 +134,7 @@ class ComZdayeSpider(scrapy.Spider):
         :param response:
         :return:
         """
-
+        
         posts_list_div = select_obj.xpath("""//div[@id="J_posts_list"]""")
         detail_page_url_list = posts_list_div.xpath(""".//div[@class="thread_item"]//h3/a/@href""")
 
@@ -138,15 +144,6 @@ class ComZdayeSpider(scrapy.Spider):
                           , headers=response.request.headers)
                         #   , headers=response.request.headers, meta=response.request.meta.update({"proxy": self.proxy_url}))
 
-    def _set_page_total(self, page_num):
-        
-        # # 通过阈值终止抓取
-        # if len(self.empty_page_list) <= self.empty_page_threshold:
-        #     return
-
-        for page in range(1, page_num + 1):
-            if page not in self.page_total:
-                self.page_total.append(page)
 
     @staticmethod
     def _get_page_num(select_obj):
@@ -179,18 +176,25 @@ class ComZdayeSpider(scrapy.Spider):
 
         return page_num
 
+
     def parse_data(self, select_obj, response):
+        # 解析详情页数据
         # so select_obj
         tr_so_list = select_obj.xpath("""//div[@id="J_posts_list"]//table[@id='ipc']//tbody//tr""")
 
-        #   # 遇到空页面，记录page
-        # if not len(tr_so_list):
-        #     page_num_match = self.re_compile.match(response.url)
-        #     page_num_dict = page_num_match.groupdict()
-        #     page_num = page_num_dict.get("page", "unknown")
+        page_num = self._get_page_num(select_obj)
+        # 通过阈值终止抓取
+        if len(self.empty_page_list) <= self.empty_page_threshold:
+            self._set_page_total(page_num)
+
+        # 遇到空页面，记录page
+        if not len(tr_so_list):
+            page_num_match = self.re_compile_proxy_detail.match(response.url)
+            page_num_dict = page_num_match.groupdict()
+            # page_num = page_num_dict.get("page", "unknown")
+            page_num = "_".join(page_num_dict.values())
             
-        #     self.empty_page_list.append(page_num)
-        
+            self.empty_page_list.append(page_num)
         
         for tr_so in tr_so_list:
 
@@ -203,5 +207,3 @@ class ComZdayeSpider(scrapy.Spider):
             item_loader.add_xpath(Cn66IPItemEnum.location.value, "./td[position()=3]/text()")
             item_loader.add_xpath(Cn66IPItemEnum.anonymity_type.value, "./td[position()=4]/text()")
             yield item_loader.load_item()
-
-        pass

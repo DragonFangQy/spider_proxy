@@ -1,6 +1,8 @@
 import os
 
-
+"""
+    db config
+"""
 # db config
 DB_HOST = os.environ.get("DB_HOST", "127.0.0.1")
 DB_PORT = os.environ.get("DB_PORT", "5432")
@@ -23,6 +25,10 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://%s:%s@%s:%s/%s' % (
 )
 
 
+
+"""
+    MQ config 
+"""
 # MQ config   
 # account   guest
 # pwd       guest
@@ -44,25 +50,39 @@ MQ_CONFIG = {'host': MQ_HOST,
 PRODUCER_TOPIC = os.environ.get("MQ_PRODUCER_TOPIC", "new_proxy_data")
 
 
+
+"""
+    Log config
+"""
 LOG_LEVEL = os.environ.get("CONF_LOG_LEVEL", "INFO")
 
 
+
+"""
+    Scrapy config
+"""
 CONCURRENT_REQUESTS = int(os.environ.get("CONF_CONCURRENT_REQUESTS", "3"))
 DOWNLOAD_DELAY = int(os.environ.get("CONF_DOWNLOAD_DELAY", "3"))
 AUTOTHROTTLE_START_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_START_DELAY", "3"))
 AUTOTHROTTLE_MAX_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_MAX_DELAY", "10"))
+# 初始页码数量
 INIT_PAGE_SIZE = int(os.environ.get("CONF_INIT_PAGE_SIZE", "5"))
-CONCURRENT_REQUESTS_PER_DOMAIN = int(os.environ.get("CONF_CONCURRENT_REQUESTS_PER_DOMAIN", "10"))
+# 最大页码
+MAX_PAGE_SIZE = int(os.environ.get("CONF_MAX_PAGE_SIZE", "1000"))
+CONCURRENT_REQUESTS_PER_DOMAIN = int(os.environ.get("CONF_CONCURRENT_REQUESTS_PER_DOMAIN", "1000"))
 # 代理个数
 PROXY_NUM = int(os.environ.get("CONF_PROXY_NUM", "100"))
 # 使用刷新次数
 REFRESH_PROXY_NUM = int(os.environ.get("CONF_PROXY_NUM", "100"))
+# zdaye 专属，差异月份，默认2
+ZDAYE_DIFF_MONTH = int(os.environ.get("CONF_ZDAYE_DIFF_MONTH", "2"))
+
 
 
 """
     Kafka Config
 """
-KAFKA_BROKER = os.environ.get("CONF_KAFKA_BROKER", "8.218.227.109:9095")
+KAFKA_BROKER = os.environ.get("CONF_KAFKA_BROKER", "127.0.0.1:9095")
 KAFKA_TOPIC = os.environ.get("CONF_KAFKA_TOPIC", "spider_topic")
 KAFKA_GROUP = os.environ.get("CONF_KAFKA_CONSUMER_GROUP", "test_topic_consumer_group_0001")
 KAFKA_POLL_TIMEOUT = int(os.environ.get("CONF_KAFKA_POLL_TIMEOUT", "5"))

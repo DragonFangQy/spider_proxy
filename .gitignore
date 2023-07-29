@@ -127,3 +127,5 @@ dmypy.json
 log/*
 
 local_deploy/*
+
+**/logs/*

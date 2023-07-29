@@ -51,6 +51,10 @@ class BaseSpider(scrapy.Spider, metaclass=ABCMeta):
         pass
 
     def _set_page_total(self, page_num):
+        # 已存在 或者 超过 1000，直接返回
+        if page_num in self.page_total or len(self.page_total) >= config.MAX_PAGE_SIZE:
+            return
+
         for page in range(self.start_page_num, page_num + 1):
             if page not in self.page_total:
                 self.page_total.append(page)
