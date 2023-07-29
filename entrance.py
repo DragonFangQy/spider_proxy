@@ -18,6 +18,7 @@ if __name__ == '__main__':
             crawler.crawl('cn_66ip')
             crawler.crawl('cn_89ip')
             crawler.crawl('com_seofangfa') 
+            crawler.crawl('com_zdaye') 
 
             crawler.start()
         
