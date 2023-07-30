@@ -76,6 +76,7 @@ PROXY_NUM = int(os.environ.get("CONF_PROXY_NUM", "100"))
 REFRESH_PROXY_NUM = int(os.environ.get("CONF_PROXY_NUM", "100"))
 # zdaye 专属，差异月份，默认2
 ZDAYE_DIFF_MONTH = int(os.environ.get("CONF_ZDAYE_DIFF_MONTH", "2"))
+START_TIME_SLEEP = int(os.environ.get("CONF_START_TIME_SLEEP", "1"))
 
 
 

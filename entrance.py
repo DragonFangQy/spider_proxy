@@ -1,12 +1,13 @@
 import time
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
+from spider_proxy.spider_common import config
 
 if __name__ == '__main__':
 
     counter = 0
 
-    time.sleep(15)
+    time.sleep(config.START_TIME_SLEEP)
     while True:
         try:
 
