@@ -23,7 +23,6 @@ class Producer(object):
         channel.basic_publish(exchange=self.config['exchange']
                               , routing_key=routing_key, body=message)
 
-        print("[x] Sent message %r for %r" % (message, routing_key))
 
     def create_connection(self):
         credentials = pika.PlainCredentials(self.config['user'], self.config['pwd'])

@@ -81,15 +81,15 @@ class Cn66IPDownloaderMiddleware:
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
         proxy_url = get_proxy_url()
-        print
+        
         if not proxy_url:
             return None
 
         request.meta.update({
 	        "proxy": proxy_url,
         })
-        print(f""""proxy": {proxy_url}""")
-        return request
+        
+        spider.logger.info(f" proxy: {proxy_url}")
         
 
     def process_response(self, request, response, spider):
