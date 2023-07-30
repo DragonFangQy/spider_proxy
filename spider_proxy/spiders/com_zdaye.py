@@ -62,7 +62,7 @@ class ComZdayeSpider(BaseSpider):
 
             for page in self.page_total:
                 temp_str = year+"_"+month
-                self.my_logger.info(f"月份: {temp_str},当前 page：{page}, page_total：{self.page_total}")
+                self.my_logger.info(f"月份: {temp_str},当前 page：{page}, page_total：{len(self.page_total)}")
                 yield Request(url=self.url_format.format(year=year, month=month, page=page), headers=headers_dict)
 
             # 设置时间为本月的第一天

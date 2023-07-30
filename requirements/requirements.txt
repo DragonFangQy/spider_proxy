@@ -53,5 +53,5 @@ zope.interface==5.5.2
 alembic==1.11.1
 confluent-kafka==2.1.1
 jsonschema
-colorlog
+colorlog==6.7.0
 pandas==2.0.3
