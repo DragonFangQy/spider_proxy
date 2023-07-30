@@ -163,7 +163,9 @@ class ComZdayeSpider(BaseSpider):
         # 获取每页篇数
         # total_num // page_size 可以整除，页数 = total_num // page_size
         # total_num // page_size 不可以整除，页数 = total_num // page_size +1
-        
+        if len(page_div) == 0:
+            return 1
+
         total_num = int(page_div.xpath("""./font/b/text()""").extract_first())
         page_size_str = split_flag.join(page_div.xpath("""./text()""").extract())
         page_size = re.search(r"每页(?P<page_size>\d+).*?" + split_flag, page_size_str, re.S)

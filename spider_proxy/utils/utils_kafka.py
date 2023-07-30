@@ -159,10 +159,17 @@ class KafkaConsumer(object):
 
                 self.callback(msg)
                 
-                self.kafka_consumer.store_offsets(msg)
+                # self.kafka_consumer.store_offsets(msg)
                 counter+=1
+                
                 if counter >= config.KAFKA_COMMIT_PER:
-                    self.kafka_consumer.commit()
+                    my_logger.info(f"message info: {{ \
+                                    topic:{msg.topic()}, \
+                                    partition:{msg.partition()}, \
+                                    offset:{msg.offset()}, \
+                                }}  ")  
+                                
+                    self.kafka_consumer.commit(message=msg)
                     counter = 0
 
             except Exception as e:

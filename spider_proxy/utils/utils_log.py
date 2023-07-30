@@ -31,13 +31,13 @@ log_colors_config = {
 }
 
 color_fmt_list = [
-    '%(log_color)s %(levelname)1.1s %(asctime)s %(reset)s',
-    '%(bold_white)s %(name)-8s %(reset)s',
-    '%(message_level_log_color)s    %(levelname)-8s %(reset)s',
-    '%(message_log_color)s %(message)s %(reset)s',
+    '    %(log_color)s %(levelname)1.1s %(asctime)s %(reset)s',
+    '    %(bold_white)s %(name)-8s %(reset)s',
+    '    %(message_level_log_color)s    %(levelname)-8s %(reset)s',
+    '    %(message_log_color)s %(message)s %(reset)s\n',
 ]
 LOG_FORMATTER = colorlog.ColoredFormatter(
-            " | ".join(color_fmt_list),
+            "\n".join(color_fmt_list),
             reset=True,
             log_colors=log_colors_config,
             secondary_log_colors={
@@ -113,7 +113,8 @@ class Logger(logging.Logger):
                             filename=log_file_path, 
                             when="MIDNIGHT", 
                             interval=1,
-                            backupCount=30
+                            backupCount=30,
+                            encoding="utf-8"
                             )
         
         log_formatter = log_info.get("log_formatter")
@@ -175,8 +176,8 @@ class Logger(logging.Logger):
             self.__logger.removeHandler(log_handler)
             if not isinstance(log_handler, logging.Handler):
                 raise ValueError(f"{log_handler} not isinstance logging.Handler ")
-            log_handler.close() 
-        print()
+            log_handler.close()
+
 
     def debug(self, message):
         self.__console(logging.DEBUG, message)
