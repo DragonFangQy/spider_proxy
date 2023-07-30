@@ -10,6 +10,7 @@ from itemloaders.processors import TakeFirst
 from spider_proxy.spider_items.cn_66ip_item import Cn66IPItem, Cn66IPItemEnum
 from spider_proxy.spiders.base_spider import BaseSpider
 from spider_proxy.spider_common import config
+from spider_proxy.utils.utils_proxy import get_proxy_url
 
 
 
@@ -41,7 +42,7 @@ class ComZdayeSpider(BaseSpider):
 
 
     def get_re_compile(self):
-        return re.compile("https://www.zdaye.com/dayProxy/(?P<year>\d+)/(?P<month>\d+)/(?P<page>\d+).html")
+        return re.compile(".*?www.zdaye.com/dayProxy/(?P<year>\d+)/(?P<month>\d+)/(?P<page>\d+).html")
 
 
     def start_requests(self):
@@ -62,8 +63,13 @@ class ComZdayeSpider(BaseSpider):
 
             for page in self.page_total:
                 temp_str = year+"_"+month
-                self.my_logger.info(f"月份: {temp_str},当前 page：{page}, page_total：{len(self.page_total)}")
-                yield Request(url=self.url_format.format(year=year, month=month, page=page), headers=headers_dict)
+                url=self.url_format.format(year=year, month=month, page=page)
+                proxy_url = get_proxy_url()
+
+                self.my_logger.info(f"page_total：{len(self.page_total)},月份: {temp_str},当前 page：{page}\n url: {url}\n proxy_url: {proxy_url}\n")
+
+                yield Request(url=url, headers=headers_dict, meta={"proxy": proxy_url,})
+                yield Request(url=url, headers=headers_dict)
 
             # 设置时间为本月的第一天
             # 通过timedelta 获取上个月的 年份&月份

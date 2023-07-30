@@ -5,6 +5,7 @@ from scrapy.loader import ItemLoader
 from itemloaders.processors import TakeFirst
 from spider_proxy.spider_items.cn_66ip_item import Cn66IPItem, Cn66IPItemEnum
 from spider_proxy.spiders.base_spider import BaseSpider
+from spider_proxy.utils.utils_proxy import get_proxy_url
 
 
 class Cn89ipSpider(BaseSpider):
@@ -19,13 +20,17 @@ class Cn89ipSpider(BaseSpider):
         return "http://www.89ip.cn/index_{page}.html"
 
     def get_re_compile(self):
-        return re.compile("https://www.89ip.cn/index_(?P<page>\d+).html")
+        return re.compile(".*?www.89ip.cn/index_(?P<page>\d+).html")
     
     def start_requests(self):
         for page in self.page_total:
-            # print("page_total：%s,当前 page：%s" % (len(self.page_total), page))
+            
             url=self.url_format.format(page=page)
-            self.my_logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\nurl: {url}\n")
+            proxy_url = get_proxy_url()
+
+            self.my_logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\n url: {url}\n proxy_url: {proxy_url}\n")
+
+            yield Request(url=url, meta={"proxy": proxy_url,})
             yield Request(url=url)
 
     def parse(self, response):        
