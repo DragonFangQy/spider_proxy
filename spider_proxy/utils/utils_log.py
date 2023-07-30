@@ -201,6 +201,8 @@ class Logger(logging.Logger):
             
             # 
             handler_list = self._set_log_handler(level)
+            self.__logger.info(f"__console handler_list:{len(handler_list)}")
+
 
             level_dict = {
                 logging.DEBUG:self.__logger.debug,
@@ -224,6 +226,7 @@ class Logger(logging.Logger):
             log_func(_message) 
 
             self._close_handler(handler_list)
+            self.__logger.info(f"__console handler_list:{len(handler_list)}")
 
 
 log_name = "log_name.log"
