@@ -25,7 +25,7 @@ RUN chmod -R 777 docker/ db_repo/ alembic_repos/ &&\
 COPY spider_proxy /${PROJECT_DIRNAME}/spider_proxy
 COPY scrapy.cfg /${PROJECT_DIRNAME}/scrapy.cfg
 COPY entrance.py /${PROJECT_DIRNAME}/entrance.py
-COPY entrance.py /${PROJECT_DIRNAME}/alembic.ini
+COPY alembic.ini /${PROJECT_DIRNAME}/alembic.ini
 
 
 CMD ./docker/run_app.sh
