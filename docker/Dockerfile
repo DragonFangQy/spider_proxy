@@ -10,9 +10,10 @@ WORKDIR /${PROJECT_DIRNAME}
 COPY requirements/requirements.txt /${PROJECT_DIRNAME}/requirements.txt
 COPY docker/ /${PROJECT_DIRNAME}/docker/
 COPY db_repo/ /${PROJECT_DIRNAME}/db_repo/
+COPY alembic_repos/ /${PROJECT_DIRNAME}/alembic_repos/
 
 # install python packages.
-RUN chmod -R 777 docker/ db_repo/ &&\
+RUN chmod -R 777 docker/ db_repo/ alembic_repos/ &&\
     pip3 config --global set global.index-url https://mirrors.aliyun.com/pypi/simple/ &&\
     pip3 config --global set install.trusted-host mirrors.aliyun.com &&\
     pip3 install --quiet --upgrade pip &&\
@@ -24,6 +25,7 @@ RUN chmod -R 777 docker/ db_repo/ &&\
 COPY spider_proxy /${PROJECT_DIRNAME}/spider_proxy
 COPY scrapy.cfg /${PROJECT_DIRNAME}/scrapy.cfg
 COPY entrance.py /${PROJECT_DIRNAME}/entrance.py
+COPY entrance.py /${PROJECT_DIRNAME}/alembic.ini
 
 
 CMD ./docker/run_app.sh
