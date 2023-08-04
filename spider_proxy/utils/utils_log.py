@@ -177,6 +177,8 @@ class Logger(logging.Logger):
             if not isinstance(log_handler, logging.Handler):
                 raise ValueError(f"{log_handler} not isinstance logging.Handler ")
             log_handler.close()
+            
+        handler_list = []
 
 
     def debug(self, message):
@@ -201,7 +203,7 @@ class Logger(logging.Logger):
             
             # 
             handler_list = self._set_log_handler(level)
-            self.__logger.info(f"__console handler_list:{len(handler_list)}")
+            self.__logger.info(f"__console handler_list start :{len(handler_list)}")
 
 
             level_dict = {
@@ -226,7 +228,7 @@ class Logger(logging.Logger):
             log_func(_message) 
 
             self._close_handler(handler_list)
-            self.__logger.info(f"__console handler_list:{len(handler_list)}")
+            self.__logger.info(f"__console handler_list end:{len(handler_list)}")
 
 
 log_name = "log_name.log"
