@@ -102,7 +102,7 @@ KAFKA_CONSUMER_CONF = {
     "bootstrap.servers": KAFKA_BROKER,
     "group.id": KAFKA_GROUP,
     "session.timeout.ms": 6000,
-    "auto.offset.reset": "earliest",
+    "auto.offset.reset": "latest",
     "enable.auto.offset.store": False, 
 }
  
