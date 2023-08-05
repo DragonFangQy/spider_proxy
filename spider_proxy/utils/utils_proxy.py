@@ -7,7 +7,11 @@ from spider_proxy.utils.utils_db import db_session
 from spider_proxy.spider_model.spider_proxy_model import SpiderProxyModel
 
 use_count = 0
-useable_1_list = db_session.query(SpiderProxyModel).filter(SpiderProxyModel.useable == 1).order_by(SpiderProxyModel.update_time).limit(config.PROXY_NUM).all()
+useable_1_list = db_session\
+	.query(SpiderProxyModel)\
+	.filter(SpiderProxyModel.useable == 1, SpiderProxyModel.total_seconds <= 600)\
+	.order_by(SpiderProxyModel.update_time)\
+	.limit(config.PROXY_NUM).all()
 
 def get_proxy_url():
 	"""
@@ -25,8 +29,11 @@ def get_proxy_url():
 	
 	use_count +=1
 	if use_count == config.REFRESH_PROXY_NUM or not useable_1_list:
-		useable_1_list = db_session.query(SpiderProxyModel).filter(SpiderProxyModel.useable == 1).order_by(SpiderProxyModel.update_time).limit(config.PROXY_NUM).all()
-	
+		useable_1_list = db_session\
+							.query(SpiderProxyModel)\
+							.filter(SpiderProxyModel.useable == 1, SpiderProxyModel.total_seconds <= 600)\
+							.order_by(SpiderProxyModel.update_time)\
+							.limit(config.PROXY_NUM).all()
 	return "%s://%s:%s" % (proxy_model.protocol, proxy_model.ip, proxy_model.port)
 
 
