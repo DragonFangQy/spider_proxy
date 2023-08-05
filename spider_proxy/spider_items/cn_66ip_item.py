@@ -1,7 +1,7 @@
 from enum import Enum
 import scrapy
-from scrapy.loader.processors import TakeFirst
-# from itemloaders.processors import TakeFirst
+# from scrapy.loader.processors import TakeFirst
+from itemloaders.processors import TakeFirst
 
 class Cn66IPItemEnum(Enum):
     protocol = "protocol"

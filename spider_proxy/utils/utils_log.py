@@ -14,7 +14,7 @@ base_file_path = os.path.dirname( os.path.dirname(__file__) )
 # LOG_PATH 
 LOG_PATH = os.getenv("LOG_PATH", base_file_path+"/logs/")
 LOG_ONLY_CONSOLE = os.getenv("LOG_ONLY_CONSOLE", "False")
-print(LOG_PATH)
+# print(LOG_PATH)
 
 # level info 20 debug 10
 log_level = os.getenv("LOG_LEVEL", logging.INFO)
@@ -203,7 +203,7 @@ class Logger(logging.Logger):
             
             # 
             handler_list = self._set_log_handler(level)
-            self.__logger.info(f"__console handler_list start :{len(handler_list)}")
+            # self.__logger.info(f"__console handler_list start :{len(handler_list)}")
 
 
             level_dict = {
@@ -227,8 +227,8 @@ class Logger(logging.Logger):
             log_func = level_dict.get(level) 
             log_func(_message) 
 
+            # self.__logger.info(f"__console handler_list end:{len(handler_list)}")
             self._close_handler(handler_list)
-            self.__logger.info(f"__console handler_list end:{len(handler_list)}")
 
 
 log_name = "log_name.log"
