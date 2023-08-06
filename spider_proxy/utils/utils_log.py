@@ -1,25 +1,50 @@
+"""
+首先，要区分 info 和 finfo
+info 是 LOG_LEVEL
+finfo 是 file path
 
-import os
-import logging
+
+# log 所在位置
+CONF_LOG_PATH   
+
+# 默认等级
+CONF_LOG_LEVEL  
+
+# 只输出控制台，默认 false
+CONF_LOG_ONLY_CONSOLE   
+
+# finfo 中看不见 debug，默认为 True。如果为True，即使 LOG_LEVEL == debug 也看不见。
+# 这里的 info 说的是 info file，而不是 LOG_LEVEL
+CONF_LOG_FINFO_NOT_LOOK_DEBUG    
+
+# file name，默认为 service.log
+CONF_LOG_FILE_NAME
+"""
+
+
 import inspect
+import logging
+from logging.handlers import TimedRotatingFileHandler
+import os
 import re
-
+import sys
+import time
 import colorlog
 
-from logging.handlers import TimedRotatingFileHandler
 
+from  os import getenv 
+from  os.path import dirname, join
 
+# log的根目录（项目目录），当前文件目录的上上级
+log_root_dir = dirname(dirname( dirname(__file__) ))
 
-base_file_path = os.path.dirname( os.path.dirname(__file__) )
-# LOG_PATH 
-LOG_PATH = os.getenv("LOG_PATH", base_file_path+"/logs/")
-LOG_ONLY_CONSOLE = os.getenv("LOG_ONLY_CONSOLE", "False")
-# print(LOG_PATH)
-
-# level info 20 debug 10
-log_level = os.getenv("LOG_LEVEL", logging.INFO)
-# 默认debug 只log debug
-log_info_not_look_debug = os.getenv("LOG_INFO_NOT_LOOK_DEBUG", "False")
+LOG_PATH = getenv("CONF_LOG_PATH", join(log_root_dir,"logs"))
+LOG_LEVEL = getenv("CONF_LOG_LEVEL", logging._levelToName.get(logging.INFO))
+LOG_FILE_NAME = getenv("CONF_LOG_FILE_NAME", "service.log")
+LOG_ONLY_CONSOLE = False if getenv("CONF_LOG_ONLY_CONSOLE", "False").lower() == "False".lower() else True
+LOG_FINFO_NOT_LOOK_DEBUG = True if  getenv("CONF_LOG_FINFO_NOT_LOOK_DEBUG", "True").lower() == "True".lower() else False
+LOG_ONLY_CONSOLE
+LOG_FINFO_NOT_LOOK_DEBUG
 ### 日志 ###
 # 定义不同日志等级颜色
 log_colors_config = {
@@ -36,6 +61,7 @@ color_fmt_list = [
     '    %(message_level_log_color)s    %(levelname)-8s %(reset)s',
     '    %(message_log_color)s %(message)s %(reset)s\n',
 ]
+
 LOG_FORMATTER = colorlog.ColoredFormatter(
             "\n".join(color_fmt_list),
             reset=True,
@@ -59,64 +85,133 @@ LOG_FORMATTER = colorlog.ColoredFormatter(
             style='%'
         ) 
 
-# 控制日志输出路径，
 # 必须包含 logging.INFO
 LOG_INFO = {
     logging.DEBUG: {
-            "log_file_path": LOG_PATH+"/debug/service.log",
+            "log_folder": join(LOG_PATH,"debug"),
             "log_formatter": LOG_FORMATTER,
+            "log_handler_class": TimedRotatingFileHandler,
+            "log_handler_params": {
+                "filename": join(LOG_PATH,"debug", LOG_FILE_NAME), 
+                "when": "MIDNIGHT", 
+                "interval": 1,
+                "backupCount": 30,
+                "encoding":"utf-8",
+            },
         },
     logging.INFO: {
-            "log_file_path": LOG_PATH+"/info/service.log",
+            "log_folder": join(LOG_PATH,"info"),
             "log_formatter": LOG_FORMATTER,
+            "log_handler_class": TimedRotatingFileHandler,
+            "log_handler_params": {
+                "filename": join(LOG_PATH,"info", LOG_FILE_NAME), 
+                "when": "MIDNIGHT", 
+                "interval": 1,
+                "backupCount": 30,
+                "encoding":"utf-8",
+            }, 
+        },
+    logging.WARNING: {
+            "log_folder": join(LOG_PATH,"warning"),
+            "log_formatter": LOG_FORMATTER,
+            "log_handler_class": TimedRotatingFileHandler,
+            "log_handler_params": {
+                "filename": join(LOG_PATH,"warning", LOG_FILE_NAME), 
+                "when": "MIDNIGHT", 
+                "interval": 1,
+                "backupCount": 30,
+                "encoding":"utf-8",
+            },
         },
     logging.ERROR: {
-            "log_file_path": LOG_PATH+"/error/service.log",
+            "log_folder": join(LOG_PATH,"error"),
             "log_formatter": LOG_FORMATTER,
+            "log_handler_class": TimedRotatingFileHandler,
+            "log_handler_params": {
+                "filename": join(LOG_PATH,"error", LOG_FILE_NAME), 
+                "when": "MIDNIGHT", 
+                "interval": 1,
+                "backupCount": 30,
+                "encoding":"utf-8",
+            },
         },
 }
 
-class Logger(logging.Logger):
-    def __init__(self, name, level='DEBUG', encoding='utf-8', print_console=True):
-        super().__init__(name)
-        
-        self.print_console = print_console
-        self.encoding = encoding
-        self.level = level
-        self.__logger = logging.getLogger(name)
-        self.__logger.setLevel(self.level)
-        self.__logger.propagate = False
 
-        self.EXCEPTION = 45
-        
-        # 创建日志目录
+class MyLogging(object):
+    def __init__(self, level):
+
+        if logging.INFO not in LOG_INFO.keys():
+            raise ValueError("level_log_path 必须包含 logging.INFO ")
+
+        self._level = level
+        # 创建目录
         self._make_log_folder()
-
-    @staticmethod
-    def _make_log_folder():
-        LOG_INFO.get(logging.INFO)
-
-        # 创建日志目录
-        for log_info in LOG_INFO.values():
-            log_file_path = log_info.get("log_file_path")
-
-            save_dir = "/".join(log_file_path.split("/")[:-1])
-            if not os.path.exists(save_dir):
-                os.makedirs(save_dir)
+        # 创建 logger
+        self._logger_dict = self._create_loggers()
     
-    def __add_log_handler(self, level, handler_list):
+    def _make_log_folder(self): 
 
-        # 首先添加 info
-        log_info = LOG_INFO.get(level)
-        log_file_path = log_info.get("log_file_path")
-        log_handler = TimedRotatingFileHandler(
-                            filename=log_file_path, 
-                            when="MIDNIGHT", 
-                            interval=1,
-                            backupCount=30,
-                            encoding="utf-8"
-                            )
-        
+        for level_info in LOG_INFO.values():
+            log_folder = level_info.get("log_folder")
+            if not os.path.exists(log_folder):
+                os.makedirs(log_folder)
+        return log_folder
+
+    def _create_loggers(self):
+        logger_dict = {}
+
+        log_info_info = LOG_INFO[logging.INFO]
+
+        for level in logging._levelToName.keys():
+            is_default = False
+            if level == logging.NOTSET:
+                continue
+            
+            # 获取 level_info， 默认使用 INFO 的 level_info
+            level_info = LOG_INFO.get(level, None)
+            if level_info is None: 
+                is_default = True
+                level_info = LOG_INFO.get(logging.INFO)
+
+            logger = logger_dict.get(level,logging.getLogger(f"LOGGING_{logging._levelToName.get(level)}"))
+            logger.propagate = False
+            logger.parent = None
+            
+            # 先增加 控制台输出
+            self._add_console_handler(logger, logger_dict, level, level_info)
+
+            # 如果只输出到控制台，则 continue
+            if LOG_ONLY_CONSOLE:
+                continue
+
+            # 再增加 info，每个 level 都应该包含 info
+            self._add_log_handler(logger, logger_dict, level, log_info_info, logging.INFO)
+
+            if level == logging.INFO or is_default:
+                # info 只需要 info handler
+                # is_default 如果使用了默认值，说明没有 level handler 对应的自定义配置，所以不再添加 level handler
+                continue
+            
+            # 再增加 level handler
+            self._add_log_handler(logger, logger_dict, level, level_info)
+
+        return logger_dict
+
+    def _add_log_handler(self, logger, logger_dict, level, log_info, flevel=None):
+
+        if not flevel:
+            flevel = level
+
+        if level == logging.DEBUG and flevel == logging.INFO and LOG_FINFO_NOT_LOOK_DEBUG:
+            # finfo 中看不见 debug，默认为 True
+            return
+
+        # 创建 handler
+        log_handler_class = log_info.get("log_handler_class")
+        log_handler_params = log_info.get("log_handler_params")
+        log_handler = log_handler_class(**log_handler_params)
+
         log_formatter = log_info.get("log_formatter")
 
         if not isinstance(log_handler, logging.Handler):
@@ -124,113 +219,72 @@ class Logger(logging.Logger):
 
         log_handler.setFormatter(log_formatter) 
         log_handler.setLevel(level)
-        handler_list.append(log_handler)
-        self.__logger.addHandler(log_handler)
+        logger.addHandler(log_handler)
+        logger_dict.update({level: logger})
 
-    def _set_log_handler(self, level):
+    def _add_console_handler(self, logger, logger_dict, level, log_info): 
+
+        if level == logging.DEBUG and self._level > level:
+            # 如果指定 level 大于 DEBUG
+            # 则 DEBUG 不输出到控制台
+            return
         
-        handler_list = []
+        log_formatter = log_info.get("log_formatter")
 
-        if LOG_ONLY_CONSOLE.lower() == "False".lower():
-            # 首先添加 info
-            self.__add_log_handler(logging.INFO, handler_list)
-
-            for log_level, log_info in LOG_INFO.items():
-
-                # 特殊处理，将 EXCEPTION 的等级调整为 ERROR
-                # 以便添加 Handler
-                if level == self.EXCEPTION:
-                    level = logging.ERROR
-
-                # 特殊处理，只添加对应 level 的Handler
-                # 以便每个 level 都可以有自己的 file
-                # 但同时跳过 logging.INFO，
-                # 因为每个等级必须包含 这个 Handler
-                # 以便于在 info 中看到所有的 log
-                if level != log_level or level == logging.INFO:
-                    continue
-
-                # 添加对应 level 的 handler
-                self.__add_log_handler(logging.INFO, handler_list)
-
-            # 默认info 中看不见 debug
-            if level == logging.DEBUG and log_info_not_look_debug.lower() != "True".lower() :
-                handler_list = handler_list[1:]
-
-        # 最后添加 控制台输出
-        if self.print_console:
-            console_handler = colorlog.StreamHandler()
-
-            log_formatter = LOG_INFO.get(logging.INFO).get("log_formatter")
-            console_handler.setFormatter(log_formatter) 
-            console_handler.setLevel(level=logging.INFO)
-
-            handler_list.append(console_handler)
-            self.__logger.addHandler(console_handler)
-
-        return handler_list
-
-    def _close_handler(self, handler_list):
-
-        for log_handler in handler_list:
-            self.__logger.removeHandler(log_handler)
-            if not isinstance(log_handler, logging.Handler):
-                raise ValueError(f"{log_handler} not isinstance logging.Handler ")
-            log_handler.close()
-            
-        handler_list = []
-
+        console_handler = colorlog.StreamHandler()
+        console_handler.setFormatter(log_formatter)
+        console_handler.setLevel(level=level)
+        
+        logger.addHandler(console_handler)
+        logger_dict.update({level: logger})
+    
+    def _fix_stack_info(self, level, message):
+        """
+        由于log 实在本类中打印的所以 log 本身的 filename, lineNo, functionName 存在错误
+        通过本方法进行修复
+        """
+        frame = inspect.currentframe()
+        co_filename, f_lineno, f_name = frame.f_back.f_back.f_code.co_filename, frame.f_back.f_back.f_lineno, frame.f_back.f_back.f_code.co_name
+        split_tag = ";;;"
+        file_name = re.sub(r"[\\/]", split_tag, co_filename).split(split_tag)[-1]
+        message = f"[{ time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) }] | {logging.getLevelName(level)} | [{file_name}:{f_lineno}:{f_name}] - {message}"
+        return message
 
     def debug(self, message):
-        self.__console(logging.DEBUG, message)
+        try:
+            self._logger_dict[logging.DEBUG].debug( self._fix_stack_info(logging.DEBUG, message) )
+        except:
+            self._logger_dict[logging.INFO].debug( self._fix_stack_info(logging.WARNING, message) )
 
     def info(self, message):
-        self.__console(logging.INFO, message)
+        self._logger_dict[logging.INFO].info( self._fix_stack_info(logging.INFO, message) )
 
     def warning(self, message):
-        self.__console(logging.WARNING, message)
+        try:
+            self._logger_dict[logging.WARNING].warning( self._fix_stack_info(logging.WARNING, message) )
+        except:
+            self._logger_dict[logging.INFO].warning( self._fix_stack_info(logging.WARNING, message) )
 
     def error(self, message):
-        self.__console(logging.ERROR, message)
+        try:
+            self._logger_dict[logging.ERROR].error( self._fix_stack_info(logging.ERROR, message) )
+        except:
+            self._logger_dict[logging.INFO].error( self._fix_stack_info(logging.ERROR, message) )
 
     def exception(self, message):
-        self.__console(self.EXCEPTION, message)
+        try:
+            self._logger_dict[logging.ERROR].exception( self._fix_stack_info(logging.ERROR, message) )
+        except:
+            self._logger_dict[logging.INFO].exception( self._fix_stack_info(logging.ERROR, message) )
 
     def critical(self, message):
-        self.__console(logging.CRITICAL, message)
-
-    def __console(self, level, message):
-            
-            # 
-            handler_list = self._set_log_handler(level)
-            # self.__logger.info(f"__console handler_list start :{len(handler_list)}")
+        try:
+            self._logger_dict[logging.CRITICAL].critical( self._fix_stack_info(logging.CRITICAL, message) )
+        except:
+            self._logger_dict[logging.INFO].critical( self._fix_stack_info(logging.CRITICAL, message) )
 
 
-            level_dict = {
-                logging.DEBUG:self.__logger.debug,
-                logging.INFO:self.__logger.info,
-                logging.WARNING:self.__logger.warning,
-                logging.ERROR:self.__logger.error,
-                self.EXCEPTION:self.__logger.exception,
-                logging.CRITICAL:self.__logger.critical,
-            }
+my_logger = MyLogging(level=logging._nameToLevel.get(LOG_LEVEL) )
 
-            # inspect
-            frame = inspect.currentframe()
-            co_filename, f_lineno, f_name = frame.f_back.f_back.f_code.co_filename, frame.f_back.f_back.f_lineno, frame.f_back.f_back.f_code.co_name
-            co_filename = re.sub(r"\\", "/", co_filename)
-            co_filename = co_filename.split("/")[-1]
-
-            message = message+'\n'
-            _message = f"[{co_filename}:{f_lineno}:{f_name}] - {message}"
-
-            log_func = level_dict.get(level) 
-            log_func(_message) 
-
-            # self.__logger.info(f"__console handler_list end:{len(handler_list)}")
-            self._close_handler(handler_list)
-
-
-log_name = "log_name.log"
-
-my_logger = Logger(name=log_name, level=int(log_level))
+if __name__ == '__main__':
+    print(log_root_dir)
