@@ -10,12 +10,10 @@ if __name__ == '__main__':
     time.sleep(config.START_TIME_SLEEP)
     while True:
         try:
-
             settings = get_project_settings()
 
             crawler = CrawlerProcess(settings)
 
-            # crawler.crawl('com_zdaye')
             crawler.crawl('cn_66ip')
             crawler.crawl('cn_89ip')
             crawler.crawl('com_seofangfa') 
