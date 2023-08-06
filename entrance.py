@@ -2,6 +2,7 @@ import time
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from spider_proxy.spider_common import config
+from spider_proxy.utils.utils_log import my_logger
 
 if __name__ == '__main__':
 
@@ -26,11 +27,11 @@ if __name__ == '__main__':
             traceback.print_exc()
 
         counter+=1
-        print("=="*10)
-        print("\n\n")
-        print(f"counter: {counter}")
+        my_logger.info("=="*10)
+        my_logger.info("\n\n")
+        my_logger.info(f"counter: {counter}")
         time.sleep(3600)
-        print("\n\n")
-        print("=="*10)
+        my_logger.info("\n\n")
+        my_logger.info("=="*10)
 
  
