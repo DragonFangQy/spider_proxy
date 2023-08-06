@@ -19,7 +19,8 @@ class SpiderProxyModel(BaseModel):
 	telnet_num_0 = Column(Integer, default=0, nullable=False, comment="telnet 次数")
 	total_seconds = Column(Integer, default=0, nullable=False, comment="耗时 毫秒", server_default="0")
 
-	def __init__(self, ip, port, protocol="http", location="", anonymity_type="", network_operator="", useable=1):
+	def __init__(self, ip, port, protocol="http", location="", anonymity_type="", network_operator=""
+	    				, useable=1, telnet_num_1=None, telnet_num_0=None, total_seconds=None):
 		self.protocol = protocol
 		self.ip = ip
 		self.port = port
@@ -27,9 +28,9 @@ class SpiderProxyModel(BaseModel):
 		self.location = location
 		self.network_operator = network_operator
 		self.useable = useable
-		self.telnet_num_1 = 0
-		self.telnet_num_0 = 0
-		self.total_seconds = 0
+		self.telnet_num_1 = 0 if telnet_num_1 is None else telnet_num_1
+		self.telnet_num_0 = 0 if telnet_num_0 is None else telnet_num_0
+		self.total_seconds = 0 if total_seconds is None else total_seconds
 
 	def to_string(self):
 		return json.dumps(self.to_dict(), ensure_ascii=False)
