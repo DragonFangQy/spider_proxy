@@ -68,8 +68,8 @@ class ComZdayeSpider(BaseSpider):
 
                 self.my_logger.info(f"page_total：{len(self.page_total)},月份: {temp_str},当前 page：{page}\n url: {url}\n proxy_url: {proxy_url}\n")
 
-                yield Request(url=url, headers=headers_dict, meta={"proxy": proxy_url,}, dont_filter=True)
-                yield Request(url=url, headers=headers_dict, dont_filter=True)
+                yield Request(url=url, headers=headers_dict)
+                yield Request(url=url, headers=headers_dict, meta={"proxy": proxy_url,})
 
             # 设置时间为本月的第一天
             # 通过timedelta 获取上个月的 年份&月份
