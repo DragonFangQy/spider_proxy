@@ -23,7 +23,7 @@ class ComSeofangfaipSpider(BaseSpider):
     # start_page_num = 50
 
     def get_url_format(self):
-        return "https://proxy.seofangfa.com/?{count_num}"
+        return "http://proxy.seofangfa.com/?{count_num}"
 
     def get_re_compile(self):
         return re.compile(".*?www.89ip.cn/index_(?P<page>\d+).html")
@@ -31,13 +31,11 @@ class ComSeofangfaipSpider(BaseSpider):
     def start_requests(self):
         for page in self.page_total:
             
-            url=self.url_format.format(count_num=page)
-            proxy_url = get_proxy_url()
+            url=self.url_format.format(count_num=page) 
 
-            self.my_logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\n url: {url}\n proxy_url: {proxy_url}\n")
-
+            self.my_logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\n url: {url}\n")
+ 
             yield Request(url=url)
-            yield Request(url=url, meta={"proxy": proxy_url,})
 
             self._set_page_total(len(self.page_total))
 

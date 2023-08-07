@@ -38,7 +38,7 @@ class ComZdayeSpider(BaseSpider):
     
 
     def get_url_format(self):
-        return "https://www.zdaye.com/dayProxy/{year}/{month}/{page}.html"
+        return "http://www.zdaye.com/dayProxy/{year}/{month}/{page}.html"
 
 
     def get_re_compile(self):
@@ -51,8 +51,8 @@ class ComZdayeSpider(BaseSpider):
         current_datetime = datetime.datetime.now()
 
         headers_dict = {
-            "Referer": "https://www.zdaye.com/",
-            "Origin": "https://www.zdaye.com",
+            "Referer": "http://www.zdaye.com/",
+            "Origin": "http://www.zdaye.com",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.44",
         }
 
@@ -63,13 +63,11 @@ class ComZdayeSpider(BaseSpider):
 
             for page in self.page_total:
                 temp_str = year+"_"+month
-                url=self.url_format.format(year=year, month=month, page=page)
-                proxy_url = get_proxy_url()
+                url=self.url_format.format(year=year, month=month, page=page) 
 
-                self.my_logger.info(f"page_total：{len(self.page_total)},月份: {temp_str},当前 page：{page}\n url: {url}\n proxy_url: {proxy_url}\n")
-
+                self.my_logger.info(f"page_total：{len(self.page_total)},月份: {temp_str},当前 page：{page}\n url: {url}\n")
+ 
                 yield Request(url=url, headers=headers_dict)
-                yield Request(url=url, headers=headers_dict, meta={"proxy": proxy_url,})
 
             # 设置时间为本月的第一天
             # 通过timedelta 获取上个月的 年份&月份

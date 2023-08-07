@@ -61,19 +61,19 @@ LOG_LEVEL = os.environ.get("CONF_LOG_LEVEL", "INFO")
 """
     Scrapy config
 """
-CONCURRENT_REQUESTS = int(os.environ.get("CONF_CONCURRENT_REQUESTS", "3"))
-DOWNLOAD_DELAY = int(os.environ.get("CONF_DOWNLOAD_DELAY", "3"))
-AUTOTHROTTLE_START_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_START_DELAY", "3"))
-AUTOTHROTTLE_MAX_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_MAX_DELAY", "10"))
+CONCURRENT_REQUESTS = int(os.environ.get("CONF_CONCURRENT_REQUESTS", "20"))
+DOWNLOAD_DELAY = int(os.environ.get("CONF_DOWNLOAD_DELAY", "10"))
+AUTOTHROTTLE_START_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_START_DELAY", "10"))
+AUTOTHROTTLE_MAX_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_MAX_DELAY", "20"))
 # 初始页码数量
 INIT_PAGE_SIZE = int(os.environ.get("CONF_INIT_PAGE_SIZE", "10"))
 # 最大页码
 MAX_PAGE_SIZE = int(os.environ.get("CONF_MAX_PAGE_SIZE", "1000"))
 CONCURRENT_REQUESTS_PER_DOMAIN = int(os.environ.get("CONF_CONCURRENT_REQUESTS_PER_DOMAIN", "1000"))
 # 代理个数
-PROXY_NUM = int(os.environ.get("CONF_PROXY_NUM", "100"))
-# 使用刷新次数
-REFRESH_PROXY_NUM = int(os.environ.get("CONF_PROXY_NUM", "100"))
+PROXY_NUM = int(os.environ.get("CONF_PROXY_NUM", "10"))
+# 使用刷新次数 弃用，2023-08-07
+# REFRESH_PROXY_NUM = int(os.environ.get("CONF_PROXY_NUM", "100"))
 # zdaye 专属，差异月份，默认2
 ZDAYE_DIFF_MONTH = int(os.environ.get("CONF_ZDAYE_DIFF_MONTH", "2"))
 START_TIME_SLEEP = int(os.environ.get("CONF_START_TIME_SLEEP", "1"))
