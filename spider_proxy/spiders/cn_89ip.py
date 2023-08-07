@@ -26,12 +26,9 @@ class Cn89ipSpider(BaseSpider):
         for page in self.page_total:
             
             url=self.url_format.format(page=page)
-            proxy_url = get_proxy_url()
-
-            self.my_logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\n url: {url}\n proxy_url: {proxy_url}\n")
-
+            self.my_logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\n url: {url}\n")
+ 
             yield Request(url=url)
-            yield Request(url=url, meta={"proxy": proxy_url,})
 
     def parse(self, response):        
         yield from self.parse_data(response=response)
