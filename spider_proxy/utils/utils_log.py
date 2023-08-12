@@ -149,6 +149,24 @@ class MyLogging(object):
         self._make_log_folder()
         # 创建 logger
         self._logger_dict = self._create_loggers()
+
+        # CRITICAL = 50
+        # FATAL = CRITICAL
+        # ERROR = 40
+        # WARNING = 30
+        # WARN = WARNING
+        # INFO = 20
+        # DEBUG = 10
+        # NOTSET = 0
+        # mapping
+        self.log_dict = {
+            logging.DEBUG: self.debug,
+            logging.INFO: self.info,
+            logging.WARNING: self.warning,
+            logging.ERROR: self.error,
+            logging.CRITICAL: self.critical,
+        }
+
     
     def _make_log_folder(self): 
 
@@ -250,39 +268,51 @@ class MyLogging(object):
         message = f"[{ time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) }] | {logging.getLevelName(level)} | [{file_name}:{f_lineno}:{f_name}] - {message}"
         return message
 
-    def debug(self, message):
+
+    def debug(self, message, *args, **kwargs):
         try:
-            self._logger_dict[logging.DEBUG].debug( self._fix_stack_info(logging.DEBUG, message) )
+            self._logger_dict[logging.DEBUG].debug( self._fix_stack_info(logging.DEBUG, message), *args, **kwargs )
         except:
-            self._logger_dict[logging.INFO].debug( self._fix_stack_info(logging.WARNING, message) )
+            self._logger_dict[logging.INFO].debug( self._fix_stack_info(logging.WARNING, message), *args, **kwargs )
 
-    def info(self, message):
-        self._logger_dict[logging.INFO].info( self._fix_stack_info(logging.INFO, message) )
 
-    def warning(self, message):
+    def info(self, message, *args, **kwargs):
+        self._logger_dict[logging.INFO].info( self._fix_stack_info(logging.INFO, message), *args, **kwargs )
+
+
+    def warning(self, message, *args, **kwargs):
         try:
-            self._logger_dict[logging.WARNING].warning( self._fix_stack_info(logging.WARNING, message) )
+            self._logger_dict[logging.WARNING].warning( self._fix_stack_info(logging.WARNING, message), *args, **kwargs )
         except:
-            self._logger_dict[logging.INFO].warning( self._fix_stack_info(logging.WARNING, message) )
+            self._logger_dict[logging.INFO].warning( self._fix_stack_info(logging.WARNING, message), *args, **kwargs )
 
-    def error(self, message):
+
+    def error(self, message, *args, **kwargs):
         try:
-            self._logger_dict[logging.ERROR].error( self._fix_stack_info(logging.ERROR, message) )
+            self._logger_dict[logging.ERROR].error( self._fix_stack_info(logging.ERROR, message), *args, **kwargs )
         except:
-            self._logger_dict[logging.INFO].error( self._fix_stack_info(logging.ERROR, message) )
+            self._logger_dict[logging.INFO].error( self._fix_stack_info(logging.ERROR, message), *args, **kwargs )
 
-    def exception(self, message):
+
+    def exception(self, message, *args, **kwargs):
         try:
-            self._logger_dict[logging.ERROR].exception( self._fix_stack_info(logging.ERROR, message) )
+            self._logger_dict[logging.ERROR].exception( self._fix_stack_info(logging.ERROR, message), *args, **kwargs )
         except:
-            self._logger_dict[logging.INFO].exception( self._fix_stack_info(logging.ERROR, message) )
+            self._logger_dict[logging.INFO].exception( self._fix_stack_info(logging.ERROR, message), *args, **kwargs )
 
-    def critical(self, message):
+
+    def critical(self, message, *args, **kwargs):
         try:
-            self._logger_dict[logging.CRITICAL].critical( self._fix_stack_info(logging.CRITICAL, message) )
+            self._logger_dict[logging.CRITICAL].critical( self._fix_stack_info(logging.CRITICAL, message), *args, **kwargs )
         except:
-            self._logger_dict[logging.INFO].critical( self._fix_stack_info(logging.CRITICAL, message) )
+            self._logger_dict[logging.INFO].critical( self._fix_stack_info(logging.CRITICAL, message), *args, **kwargs )
 
+
+    def log(self, level, msg, *args, **kwargs):
+        level_func = self.log_dict(level)
+        level_func(msg, *args, **kwargs)
+        
+ 
 
 my_logger = MyLogging(level=logging._nameToLevel.get(LOG_LEVEL) )
 
