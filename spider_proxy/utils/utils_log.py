@@ -317,4 +317,4 @@ class MyLogging(object):
 my_logger = MyLogging(level=logging._nameToLevel.get(LOG_LEVEL) )
 
 if __name__ == '__main__':
-    print(log_root_dir)
+    print(log_root_dir)  
