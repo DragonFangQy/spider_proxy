@@ -309,7 +309,7 @@ class MyLogging(object):
 
 
     def log(self, level, msg, *args, **kwargs):
-        level_func = self.log_dict(level)
+        level_func = self.log_dict[level]
         level_func(msg, *args, **kwargs)
         
  
