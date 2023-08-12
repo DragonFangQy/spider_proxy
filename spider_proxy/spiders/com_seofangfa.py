@@ -12,17 +12,17 @@ from spider_proxy.utils.utils_proxy import get_proxy_url
 class ComSeofangfaipSpider(BaseSpider):
     name = 'com_seofangfa'
     allowed_domains = ['seofangfa.com']
-    custom_settings={
-        "DOWNLOAD_DELAY": 120, 
-        "AUTOTHROTTLE_START_DELAY":120, 
-        "AUTOTHROTTLE_MAX_DELAY": 120
-    }
+    # custom_settings={
+    #     "DOWNLOAD_DELAY": 120, 
+    #     "AUTOTHROTTLE_START_DELAY":120, 
+    #     "AUTOTHROTTLE_MAX_DELAY": 120
+    # }
 
     def get_url_format(self):
-        return "http://proxy.seofangfa.com/?{count_num}"
+        return "https://proxy.seofangfa.com/?{count_num}"
 
     def get_re_compile(self):
-        return re.compile(".*?www.89ip.cn/index_(?P<page>\d+).html")
+        return None
     
     def start_requests(self):
         for page in self.page_total:
@@ -31,7 +31,7 @@ class ComSeofangfaipSpider(BaseSpider):
 
             self.my_logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\n url: {url}\n")
  
-            yield Request(url=url)
+            yield Request(url=url, headers=self.get_header({"Host": "proxy.seofangfa.com"}))
 
             self._set_page_total(len(self.page_total))
 

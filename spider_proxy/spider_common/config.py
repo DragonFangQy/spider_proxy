@@ -61,10 +61,10 @@ LOG_LEVEL = os.environ.get("CONF_LOG_LEVEL", "INFO")
 """
     Scrapy config
 """
-CONCURRENT_REQUESTS = int(os.environ.get("CONF_CONCURRENT_REQUESTS", "20"))
-DOWNLOAD_DELAY = int(os.environ.get("CONF_DOWNLOAD_DELAY", "10"))
-AUTOTHROTTLE_START_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_START_DELAY", "10"))
-AUTOTHROTTLE_MAX_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_MAX_DELAY", "20"))
+CONCURRENT_REQUESTS = int(os.environ.get("CONF_CONCURRENT_REQUESTS", "2"))
+DOWNLOAD_DELAY = int(os.environ.get("CONF_DOWNLOAD_DELAY", "2"))
+AUTOTHROTTLE_START_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_START_DELAY", "2"))
+AUTOTHROTTLE_MAX_DELAY = int(os.environ.get("CONF_AUTOTHROTTLE_MAX_DELAY", "4"))
 # 初始页码数量
 INIT_PAGE_SIZE = int(os.environ.get("CONF_INIT_PAGE_SIZE", "20"))
 # 最大页码

@@ -1,6 +1,7 @@
 
 
 from abc import ABCMeta, abstractmethod
+from typing import Dict
 import scrapy
 
 from spider_proxy.spider_common import config
@@ -20,6 +21,13 @@ class BaseSpider(scrapy.Spider, metaclass=ABCMeta):
     empty_page_list = []
     empty_page_threshold = 5
 
+    request_headers = {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+        "Connection": "keep-alive",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+    }
+
     def __init__(self, name=None, **kwargs):
         super().__init__(name, **kwargs)
         self.url_format = self.get_url_format()
@@ -34,13 +42,12 @@ class BaseSpider(scrapy.Spider, metaclass=ABCMeta):
     def get_re_compile(self):
         pass
 
-    # @property
-    # def empty_page_threshold(self):
-    #     return self.empty_page_threshold
-    
-    # @property.setter
-    # def empty_page_threshold(self, value):
-    #     self.empty_page_threshold = value
+    def get_header(self, header: Dict = None):
+        if header is None: 
+            return self.request_headers
+        
+        self.request_headers.update(header)
+        return self.request_headers
 
     @abstractmethod
     def parse_data(self,*args, **kwargs):

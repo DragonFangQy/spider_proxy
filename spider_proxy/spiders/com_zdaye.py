@@ -21,12 +21,12 @@ class ComZdayeSpider(BaseSpider):
     name = 'com_zdaye'
     allowed_domains = ['zdaye.com']
 
-    custom_settings={
-        "DOWNLOAD_DELAY": 300, 
-        "AUTOTHROTTLE_START_DELAY":300, 
-        "AUTOTHROTTLE_MAX_DELAY": 600
-        }
-    page_total = [1,2,3,4,5,6,7,8,9]
+    # custom_settings={
+    #     "DOWNLOAD_DELAY": 300, 
+    #     "AUTOTHROTTLE_START_DELAY":300, 
+    #     "AUTOTHROTTLE_MAX_DELAY": 600
+    #     }
+    # page_total = [1,2,3,4,5,6,7,8,9]
     
     """
     parse
@@ -61,6 +61,7 @@ class ComZdayeSpider(BaseSpider):
         headers_dict = {
             "Referer": "http://www.zdaye.com/",
             "Origin": "http://www.zdaye.com",
+            "Host": "www.zdaye.com",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36 Edg/111.0.1661.44",
         }
 
@@ -75,7 +76,7 @@ class ComZdayeSpider(BaseSpider):
 
                 self.my_logger.info(f"page_total：{len(self.page_total)},月份: {temp_str},当前 page：{page}\n url: {url}\n")
  
-                yield Request(url=url, headers=headers_dict)
+                yield Request(url=url, headers=self.get_header(headers_dict))
 
             # 设置时间为本月的第一天
             # 通过timedelta 获取上个月的 年份&月份
