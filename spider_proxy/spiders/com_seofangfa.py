@@ -13,14 +13,10 @@ class ComSeofangfaipSpider(BaseSpider):
     name = 'com_seofangfa'
     allowed_domains = ['seofangfa.com']
     custom_settings={
-        "DOWNLOAD_DELAY": 300, 
-        "AUTOTHROTTLE_START_DELAY":300, 
-        "AUTOTHROTTLE_MAX_DELAY": 300
-        }
-    
-    # test
-    # page_total = [50,51]
-    # start_page_num = 50
+        "DOWNLOAD_DELAY": 120, 
+        "AUTOTHROTTLE_START_DELAY":120, 
+        "AUTOTHROTTLE_MAX_DELAY": 120
+    }
 
     def get_url_format(self):
         return "http://proxy.seofangfa.com/?{count_num}"
