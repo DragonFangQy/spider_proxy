@@ -16,7 +16,7 @@ NEWSPIDER_MODULE = 'spider_proxy.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 SLBrowser/8.0.0.3161 SLBChan/21'
+# USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 SLBrowser/8.0.0.3161 SLBChan/21'
 
 # Obey robots.txt rules
 # ROBOTSTXT_OBEY = True
@@ -42,11 +42,11 @@ CONCURRENT_REQUESTS_PER_DOMAIN = config.CONCURRENT_REQUESTS_PER_DOMAIN
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-DEFAULT_REQUEST_HEADERS = {
-  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-  'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-  "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
-}
+# DEFAULT_REQUEST_HEADERS = {
+#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+#   'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+#   "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
+# }
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html

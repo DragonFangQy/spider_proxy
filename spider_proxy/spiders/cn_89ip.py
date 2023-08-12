@@ -17,7 +17,7 @@ class Cn89ipSpider(BaseSpider):
     # start_page_num = 50
 
     def get_url_format(self):
-        return "http://www.89ip.cn/index_{page}.html"
+        return "https://www.89ip.cn/index_{page}.html"
 
     def get_re_compile(self):
         return re.compile(".*?www.89ip.cn/index_(?P<page>\d+).html")
@@ -28,7 +28,7 @@ class Cn89ipSpider(BaseSpider):
             url=self.url_format.format(page=page)
             self.my_logger.info(f"page_total：{len(self.page_total)},当前 page：{page}\n url: {url}\n")
  
-            yield Request(url=url)
+            yield Request(url=url, headers=self.get_header({"Host": "www.89ip.cn"}))
 
     def parse(self, response):        
         yield from self.parse_data(response=response)
