@@ -20,6 +20,14 @@ from spider_proxy.utils.utils_proxy import get_proxy_url
 class ComZdayeSpider(BaseSpider):
     name = 'com_zdaye'
     allowed_domains = ['zdaye.com']
+
+    custom_settings={
+        "DOWNLOAD_DELAY": 300, 
+        "AUTOTHROTTLE_START_DELAY":300, 
+        "AUTOTHROTTLE_MAX_DELAY": 600
+        }
+    page_total = [1,2,3,4,5,6,7,8,9]
+    
     """
     parse
         add_detail_url_by_parent
