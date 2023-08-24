@@ -1,8 +1,34 @@
 import time
+
+from concurrent.futures import ProcessPoolExecutor
+
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from spider_proxy.spider_common import config
 from spider_proxy.utils.utils_log import my_logger
+
+
+
+
+def run_crawler():
+    try:
+        settings = get_project_settings()
+
+        crawler = CrawlerProcess(settings)
+
+        crawler.crawl('cn_66ip')
+        crawler.crawl('cn_89ip')
+        crawler.crawl('com_seofangfa') 
+        crawler.crawl('com_zdaye') 
+
+        crawler.start()
+    
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+
+
+
 
 if __name__ == '__main__':
 
@@ -10,21 +36,9 @@ if __name__ == '__main__':
 
     time.sleep(config.START_TIME_SLEEP)
     while True:
-        try:
-            settings = get_project_settings()
-
-            crawler = CrawlerProcess(settings)
-
-            crawler.crawl('cn_66ip')
-            crawler.crawl('cn_89ip')
-            crawler.crawl('com_seofangfa') 
-            crawler.crawl('com_zdaye') 
-
-            crawler.start()
-        
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
+        ppe = ProcessPoolExecutor(1)
+        ppe.submit(run_crawler)
+        ppe.shutdown(wait=True)
 
         counter+=1
         my_logger.info("=="*10)
