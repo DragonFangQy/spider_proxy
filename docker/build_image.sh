@@ -22,7 +22,11 @@ then
     echo "docker build debug"
     build_image ${image} docker/Dockerfile_debug .
 else
-    
+    # gitlab test
+    echo "gitlab test"
+    ls -al /usr/bin/ | grep docker
+    ls -al /var/run/ | grep docker.sock
+
     # build 镜像
     echo "docker build"
     build_image ${image} docker/Dockerfile .

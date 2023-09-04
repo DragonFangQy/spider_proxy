@@ -8,10 +8,10 @@ build_image(){
     image_name=$1
     dockerfile=$2
     context_path=$3
-    cp -r ~/.ssh .
+    # cp -r ~/.ssh .
     docker build -t ${image_name} -f ${dockerfile} ${context_path}
     build_success=$?
-    rm -rf .ssh
+    # rm -rf .ssh
     if [[ ${build_success} -eq 0 ]]; then
         echo "Build ### ${image_name} ### success!"
     else
