@@ -23,9 +23,12 @@ then
     build_image ${image} docker/Dockerfile_debug .
 else
     # gitlab test
-    echo "gitlab test"
+    echo "grep docker"
     echo "`ls -al /usr/bin/ | grep docker`"
+    echo "grep docker"
+    echo "grep docker.sock"
     echo "`ls -al /var/run/ | grep docker.sock`"
+    echo "grep docker.sock"
 
     # build 镜像
     echo "docker build"
