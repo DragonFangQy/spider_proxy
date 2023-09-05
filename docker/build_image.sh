@@ -24,8 +24,8 @@ then
 else
     # gitlab test
     echo "gitlab test"
-    ls -al /usr/bin/ | grep docker
-    ls -al /var/run/ | grep docker.sock
+    echo "'ls -al /usr/bin/ | grep docker'"
+    echo "'ls -al /var/run/ | grep docker.sock'"
 
     # build 镜像
     echo "docker build"
