@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo "docker --version"
+echo "`docker --version`"
+
+
+
 tag_suffix=$1
 # sh util_function.sh
 source ./util_function.sh
@@ -24,7 +29,7 @@ then
 else
     # gitlab test
     echo "grep docker"
-    echo "`ls -al /usr/bin/ | grep docker`"
+    echo "`ls -al /usr/bin/docker | grep docker`"
     echo "grep docker"
     echo "grep docker.sock"
     echo "`ls -al /var/run/ | grep docker.sock`"
